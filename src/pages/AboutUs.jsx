@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import aboutHero from '../assets/hero2.jpg';
-import team1 from '../assets/hero.jpg';
 
 const AboutUs = () => {
   useEffect(() => {

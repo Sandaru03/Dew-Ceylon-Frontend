@@ -20,7 +20,7 @@ const AdminPackages = () => {
   const fetchPackages = async () => {
     setLoading(true);
     try {
-      const response = await fetch(API_BASE_URL + '/api/packages');
+      const response = await fetch(API_BASE_URL + '/api/packages?includeHidden=true');
       const data = await response.json();
       setPackages([...data].sort((a, b) => b.id - a.id));
     } catch (err) {
@@ -100,6 +100,37 @@ const AdminPackages = () => {
       fetchPackages();
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleToggleLiveStatus = async (pkg) => {
+    const nextLive = !pkg.is_live;
+    const confirmText = nextLive
+      ? 'Make this journey Live and visible on the website?'
+      : 'Hide this journey from public pages?';
+
+    if (!window.confirm(confirmText)) return;
+
+    try {
+      const response = await fetch(API_BASE_URL + `/api/packages/${pkg.id}/live`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        },
+        body: JSON.stringify({ isLive: nextLive })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert('Server Error: ' + errorData.message);
+        return;
+      }
+
+      fetchPackages();
+    } catch (err) {
+      console.error(err);
+      alert('Network Error: ' + err.message);
     }
   };
 
@@ -586,6 +617,44 @@ const AdminPackages = () => {
           transform: translateY(-2px);
           box-shadow: 0 10px 20px rgba(255, 75, 75, 0.2);
         }
+
+        .btn-toggle-live {
+          background: rgba(198, 255, 0, 0.08);
+          color: var(--primary, #c6ff00);
+          border: 1px solid rgba(198, 255, 0, 0.18);
+          padding: 0.55rem 0.9rem;
+          border-radius: 10px;
+          font-size: 0.7rem;
+          font-weight: 900;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .btn-toggle-live:hover {
+          background: rgba(198, 255, 0, 0.18);
+          transform: translateY(-1px);
+        }
+
+        .btn-toggle-hidden {
+          background: rgba(255, 255, 255, 0.06);
+          color: rgba(255, 255, 255, 0.78);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          padding: 0.55rem 0.9rem;
+          border-radius: 10px;
+          font-size: 0.7rem;
+          font-weight: 900;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .btn-toggle-hidden:hover {
+          background: rgba(255, 255, 255, 0.13);
+          transform: translateY(-1px);
+        }
         
         .status-badge { background: rgba(198, 255, 0, 0.1); color: var(--primary, #c6ff00); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.75rem; font-weight: 800; }
 
@@ -670,10 +739,24 @@ const AdminPackages = () => {
                   <div style={{opacity:0.4, fontSize:'0.8rem'}}>{pkg.duration}</div>
                 </td>
                 <td><span className="status-badge" style={{background: 'rgba(255,255,255,0.05)', color: 'white', opacity: 0.6}}>{pkg.category}</span></td>
-                <td><span className="status-badge">Live</span></td>
+                <td>
+                  <span
+                    className="status-badge"
+                    style={pkg.is_live ? {} : { background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.75)' }}
+                  >
+                    {pkg.is_live ? 'Live' : 'Hidden'}
+                  </span>
+                </td>
                 <td style={{fontWeight: 900, color: 'var(--primary, #c6ff00)', fontSize: '1.2rem'}}>${pkg.price}</td>
                 <td>
                   <div className="action-btns">
+                    <button
+                      className={pkg.is_live ? 'btn-toggle-hidden' : 'btn-toggle-live'}
+                      onClick={() => handleToggleLiveStatus(pkg)}
+                      title={pkg.is_live ? 'Hide from public pages' : 'Show on public pages'}
+                    >
+                      {pkg.is_live ? 'Hide' : 'Go Live'}
+                    </button>
                     <button className="btn-edit-action" onClick={() => handleEdit(pkg)} title="Edit">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>

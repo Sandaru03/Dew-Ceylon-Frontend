@@ -14,7 +14,7 @@ const AdminFeaturedPackages = () => {
       try {
         const token = localStorage.getItem('adminToken');
         const [pkgRes, featuredRes] = await Promise.all([
-          fetch(API_BASE_URL + '/api/packages'),
+          fetch(API_BASE_URL + '/api/packages?includeHidden=true'),
           fetch(API_BASE_URL + '/api/featured-packages/ids', {
             headers: { 'Authorization': `Bearer ${token}` }
           })

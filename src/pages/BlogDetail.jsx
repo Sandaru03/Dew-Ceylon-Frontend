@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 import Footer from '../components/Footer';
 
@@ -12,7 +14,7 @@ const BlogDetail = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/blogs/${id}`);
+        const response = await fetch(API_BASE_URL + `/api/blogs/${id}`);
         if(response.ok) {
            const data = await response.json();
            if (typeof data.images === 'string') {
@@ -205,3 +207,5 @@ const BlogDetail = () => {
 };
 
 export default BlogDetail;
+
+

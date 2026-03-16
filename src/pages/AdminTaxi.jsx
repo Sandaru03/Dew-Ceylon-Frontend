@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminTaxi = () => {
   const [packages, setPackages] = useState([]);
@@ -22,7 +24,7 @@ const AdminTaxi = () => {
   const fetchPackages = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/taxi-packages');
+      const response = await fetch(API_BASE_URL + '/api/taxi-packages');
       const data = await response.json();
       setPackages(data);
     } catch (err) {
@@ -39,7 +41,7 @@ const AdminTaxi = () => {
 
   const fetchLocations = async () => {
     try {
-      const resp = await fetch('http://localhost:5000/api/taxi-packages/locations');
+      const resp = await fetch(API_BASE_URL + '/api/taxi-packages/locations');
       const data = await resp.json();
       setExistingLocations(data);
     } catch (err) {
@@ -60,7 +62,7 @@ const AdminTaxi = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this taxi package?')) return;
     try {
-      await fetch(`http://localhost:5000/api/taxi-packages/${id}`, {
+      await fetch(API_BASE_URL + `/api/taxi-packages/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -72,7 +74,7 @@ const AdminTaxi = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = editingPkg ? `http://localhost:5000/api/taxi-packages/${editingPkg.id}` : 'http://localhost:5000/api/taxi-packages';
+    const url = editingPkg ? API_BASE_URL + `/api/taxi-packages/${editingPkg.id}` : API_BASE_URL + '/api/taxi-packages';
     const method = editingPkg ? 'PUT' : 'POST';
 
     try {
@@ -265,7 +267,7 @@ const AdminTaxi = () => {
             </div>
             <div className="form-group">
               <label>Price Range / Per Person</label>
-              <input type="text" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required placeholder="e.g. LKR 16,000 – 20,000" />
+              <input type="text" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required placeholder="e.g. LKR 16,000 - 20,000" />
             </div>
           </div>
 
@@ -288,7 +290,7 @@ const AdminTaxi = () => {
             {formData.inclusions.map((item, i) => (
               <div key={i} className="list-item-row">
                 <input value={item} onChange={(e) => updateListField('inclusions', i, e.target.value)} placeholder="e.g. Professional English-Speaking driver" />
-                <button type="button" className="remove-btn" onClick={() => removeFromList('inclusions', i)}>✕</button>
+                <button type="button" className="remove-btn" onClick={() => removeFromList('inclusions', i)}>x</button>
               </div>
             ))}
           </div>
@@ -301,7 +303,7 @@ const AdminTaxi = () => {
             {formData.terms.map((item, i) => (
               <div key={i} className="list-item-row">
                 <input value={item} onChange={(e) => updateListField('terms', i, e.target.value)} placeholder="e.g. Non-refundable if minimum passengers not reached" />
-                <button type="button" className="remove-btn" onClick={() => removeFromList('terms', i)}>✕</button>
+                <button type="button" className="remove-btn" onClick={() => removeFromList('terms', i)}>x</button>
               </div>
             ))}
           </div>
@@ -429,7 +431,7 @@ const AdminTaxi = () => {
             {packages.map(pkg => (
               <tr key={pkg.id}>
                 <td>
-                  <div style={{fontWeight:900, fontSize:'1.1rem'}}>{pkg.pickup} → {pkg.dropoff}</div>
+                  <div style={{fontWeight:900, fontSize:'1.1rem'}}>{pkg.pickup} -&gt; {pkg.dropoff}</div>
                   <div style={{opacity:0.4, fontSize:'0.8rem'}}>Sri Lanka Transfer</div>
                 </td>
                 <td>
@@ -469,3 +471,6 @@ const AdminTaxi = () => {
 };
 
 export default AdminTaxi;
+
+
+

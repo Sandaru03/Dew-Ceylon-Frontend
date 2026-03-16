@@ -1,5 +1,9 @@
-import React, { Suspense, lazy } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import WhatsAppButton from './components/WhatsAppButton';
+import Loader from './components/Loader';
+import './index.css';
 
 // Lazy load components for performance
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -14,11 +18,10 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const PlanMyTrip = lazy(() => import('./pages/PlanMyTrip'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Taxi = lazy(() => import('./pages/Taxi'));
-import Navbar from './components/Navbar';
-import WhatsAppButton from './components/WhatsAppButton';
-import './index.css';
+const AboutUs = lazy(() => import('./pages/AboutUs'));
 
 const AppContent = () => {
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
 
@@ -35,6 +38,7 @@ const AppContent = () => {
       
       {!isAdmin && (
         <>
+          {loading && <Loader onFinish={() => setLoading(false)} />}
           <Navbar />
           <WhatsAppButton />
         </>
@@ -52,6 +56,7 @@ const AppContent = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/plan-my-trip" element={<PlanMyTrip />} />
           <Route path="/taxi" element={<Taxi />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/admin" element={<AdminLoginPage />} />
           <Route path="/admin/dashboard/*" element={<AdminDashboard />} />
         </Routes>

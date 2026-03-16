@@ -9,7 +9,7 @@ const Footer = () => {
           background-image: linear-gradient(rgba(15, 15, 15, 0.82), rgba(15, 15, 15, 0.88)), url(${footerBg});
           background-size: cover;
           background-position: center;
-          background-attachment: fixed;
+          background-attachment: scroll;
           background-blend-mode: multiply;
           color: var(--text-white);
           padding: 6rem 4rem 2rem 4rem;

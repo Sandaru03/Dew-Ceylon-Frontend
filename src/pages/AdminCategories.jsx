@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -9,7 +11,7 @@ const AdminCategories = () => {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/categories');
+      const response = await fetch(API_BASE_URL + '/api/categories');
       const data = await response.json();
       setCategories(data);
     } catch (err) {
@@ -26,8 +28,8 @@ const AdminCategories = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingId 
-      ? `http://localhost:5000/api/categories/${editingId}` 
-      : 'http://localhost:5000/api/categories';
+      ? API_BASE_URL + `/api/categories/${editingId}` 
+      : API_BASE_URL + '/api/categories';
     const method = editingId ? 'PUT' : 'POST';
 
     try {
@@ -61,7 +63,7 @@ const AdminCategories = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
     try {
-      await fetch(`http://localhost:5000/api/categories/${id}`, {
+      await fetch(API_BASE_URL + `/api/categories/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -244,3 +246,5 @@ const AdminCategories = () => {
 };
 
 export default AdminCategories;
+
+

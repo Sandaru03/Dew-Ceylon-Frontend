@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminPackages = () => {
   const [packages, setPackages] = useState([]);
@@ -11,16 +13,16 @@ const AdminPackages = () => {
   // Form States
   const [formData, setFormData] = useState({
     title: '', category: 'Safari', duration: '', price: '', originalPrice: '',
-    rating: 4.5, bookings: '0+', type: 'All Inclusive', image: '', description: '',
+    rating: 4.5, bookings: '0+', type: 'All Inclusive', image: '', shortDescription: '', description: '',
     gallery: [], locations: [], inclusions: [], exclusions: [], highlights: [], itinerary: []
   });
 
   const fetchPackages = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/packages');
+      const response = await fetch(API_BASE_URL + '/api/packages');
       const data = await response.json();
-      setPackages(data);
+      setPackages([...data].sort((a, b) => b.id - a.id));
     } catch (err) {
       console.error(err);
     } finally {
@@ -35,7 +37,7 @@ const AdminPackages = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/categories?type=package');
+      const response = await fetch(API_BASE_URL + '/api/categories?type=package');
       const data = await response.json();
       setCategories(data);
     } catch (err) {
@@ -52,7 +54,7 @@ const AdminPackages = () => {
     uploadData.append('image', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(API_BASE_URL + '/api/upload', {
         method: 'POST',
         body: uploadData
       });
@@ -91,7 +93,7 @@ const AdminPackages = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this package?')) return;
     try {
-      await fetch(`http://localhost:5000/api/packages/${id}`, {
+      await fetch(API_BASE_URL + `/api/packages/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -103,7 +105,7 @@ const AdminPackages = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = editingPkg ? `http://localhost:5000/api/packages/${editingPkg.id}` : 'http://localhost:5000/api/packages';
+    const url = editingPkg ? API_BASE_URL + `/api/packages/${editingPkg.id}` : API_BASE_URL + '/api/packages';
     const method = editingPkg ? 'PUT' : 'POST';
 
     try {
@@ -120,9 +122,13 @@ const AdminPackages = () => {
         setIsFormOpen(false);
         setEditingPkg(null);
         fetchPackages();
+      } else {
+        const errorData = await response.json();
+        alert('Server Error: ' + errorData.message);
       }
     } catch (err) {
       console.error(err);
+      alert('Network Error: ' + err.message);
     }
   };
 
@@ -350,7 +356,11 @@ const AdminPackages = () => {
                 <>
                   {formData.image ? <img src={formData.image} className="preview-img" alt="Preview" /> : (
                     <div style={{padding: '2rem'}}>
-                      <span style={{fontSize: '2rem'}}>🖼️</span>
+                      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{opacity: 0.75}}>
+                        <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                      </svg>
                       <p className="upload-label">Click to choose or drag image</p>
                     </div>
                   )}
@@ -417,7 +427,7 @@ const AdminPackages = () => {
                {formData.locations.map((loc, i) => (
                  <div key={i} className="list-item-row" style={{marginBottom: 0}}>
                    <input value={loc} onChange={(e) => updateListField('locations', i, e.target.value)} placeholder="e.g. Yala" />
-                   <button type="button" className="remove-btn" onClick={() => removeFromList('locations', i)}>✕</button>
+                   <button type="button" className="remove-btn" onClick={() => removeFromList('locations', i)}>x</button>
                  </div>
                ))}
              </div>
@@ -431,7 +441,7 @@ const AdminPackages = () => {
              {formData.highlights.map((h, i) => (
                <div key={i} className="list-item-row">
                  <input value={h} onChange={(e) => updateListField('highlights', i, e.target.value)} placeholder="e.g. High leopard spotting success rates..." />
-                 <button type="button" className="remove-btn" onClick={() => removeFromList('highlights', i)}>✕</button>
+                 <button type="button" className="remove-btn" onClick={() => removeFromList('highlights', i)}>x</button>
                </div>
              ))}
           </div>
@@ -445,7 +455,7 @@ const AdminPackages = () => {
                {formData.inclusions.map((item, i) => (
                  <div key={i} className="list-item-row" style={{marginBottom: 0}}>
                    <input value={item} onChange={(e) => updateListField('inclusions', i, e.target.value)} placeholder="e.g. Luxury Tent Stay" />
-                   <button type="button" className="remove-btn" onClick={() => removeFromList('inclusions', i)}>✕</button>
+                   <button type="button" className="remove-btn" onClick={() => removeFromList('inclusions', i)}>x</button>
                  </div>
                ))}
              </div>
@@ -460,7 +470,7 @@ const AdminPackages = () => {
                {formData.exclusions.map((item, i) => (
                  <div key={i} className="list-item-row" style={{marginBottom: 0}}>
                    <input value={item} onChange={(e) => updateListField('exclusions', i, e.target.value)} placeholder="e.g. International Flights" />
-                   <button type="button" className="remove-btn" onClick={() => removeFromList('exclusions', i)}>✕</button>
+                   <button type="button" className="remove-btn" onClick={() => removeFromList('exclusions', i)}>x</button>
                  </div>
                ))}
              </div>
@@ -487,7 +497,7 @@ const AdminPackages = () => {
                         <button type="button" className="remove-btn" onClick={() => {
                           const newItin = formData.itinerary.filter((_, idx) => idx !== i).map((d, idx) => ({...d, day: idx + 1}));
                           setFormData({...formData, itinerary: newItin});
-                        }}>✕</button>
+                        }}>x</button>
                       </div>
                       <textarea rows="3" value={day.desc} onChange={(e) => {
                         const newItin = [...formData.itinerary];
@@ -689,3 +699,6 @@ const AdminPackages = () => {
 };
 
 export default AdminPackages;
+
+
+

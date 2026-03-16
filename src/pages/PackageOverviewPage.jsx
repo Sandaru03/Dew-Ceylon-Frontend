@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 import Footer from '../components/Footer';
 
@@ -74,23 +76,53 @@ const PackageOverviewPage = () => {
   const [activeImage, setActiveImage] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const parseArrayField = (value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== 'string') return [];
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const normalizeGallery = (image, gallery) => {
+    const list = [];
+    if (typeof image === 'string' && image.trim()) {
+      list.push(image.trim());
+    }
+
+    for (const item of gallery) {
+      if (typeof item !== 'string') continue;
+      const clean = item.trim();
+      if (!clean || list.includes(clean)) continue;
+      list.push(clean);
+    }
+
+    return list;
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchPackage = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/packages/${id}`);
+        const response = await fetch(API_BASE_URL + `/api/packages/${id}`);
         const data = await response.json();
         
-        // Ensure JSON fields are parsed correctly if they come back as strings
+        // Normalize API payload so card image and detail hero image always match.
+        const parsedGallery = parseArrayField(data.gallery);
+        const normalizedGallery = normalizeGallery(data.image, parsedGallery);
+
         const parsedPkg = {
           ...data,
-          gallery: typeof data.gallery === 'string' ? JSON.parse(data.gallery) : data.gallery || [],
-          locations: typeof data.locations === 'string' ? JSON.parse(data.locations) : data.locations || [],
-          inclusions: typeof data.inclusions === 'string' ? JSON.parse(data.inclusions) : data.inclusions || [],
-          exclusions: typeof data.exclusions === 'string' ? JSON.parse(data.exclusions) : data.exclusions || [],
-          highlights: typeof data.highlights === 'string' ? JSON.parse(data.highlights) : data.highlights || [],
-          itinerary: typeof data.itinerary === 'string' ? JSON.parse(data.itinerary) : data.itinerary || []
+          gallery: normalizedGallery,
+          locations: parseArrayField(data.locations),
+          inclusions: parseArrayField(data.inclusions),
+          exclusions: parseArrayField(data.exclusions),
+          highlights: parseArrayField(data.highlights),
+          itinerary: parseArrayField(data.itinerary)
         };
         
         setPkg(parsedPkg);
@@ -104,6 +136,25 @@ const PackageOverviewPage = () => {
     fetchPackage();
     setActiveImage(0);
   }, [id]);
+
+  const handleShare = async () => {
+    const shareData = {
+      title: pkg.title || 'Dew Ceylon Journey',
+      text: pkg.description ? `${pkg.description.substring(0, 100)}...` : 'Check out this amazing journey in Sri Lanka!',
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Package link copied to clipboard!');
+      }
+    } catch (err) {
+      console.error('Error sharing:', err);
+    }
+  };
 
   if (loading) return <div style={{background: '#0F0F0F', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><h2>Loading Journey...</h2></div>;
   if (!pkg) return <div style={{background: '#0F0F0F', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><h2>Journey not found</h2></div>;
@@ -446,11 +497,13 @@ const PackageOverviewPage = () => {
         }
 
         .love-list li::before {
-          content: '•';
-          color: var(--primary, #c6ff00);
-          font-weight: bold;
-          font-size: 1.5rem;
-          line-height: 1;
+          content: '';
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          margin-top: 0.5rem;
+          background: var(--primary, #c6ff00);
+          flex-shrink: 0;
         }
 
         /* Mobile */
@@ -469,7 +522,7 @@ const PackageOverviewPage = () => {
         <div className="image-gallery-col animate-fade-in-left">
           <div className="main-image-wrapper">
             <span className="best-seller-badge">Best Seller</span>
-            <img src={pkg.gallery[activeImage]} alt={pkg.title} />
+            <img src={pkg.gallery[activeImage] || pkg.image} alt={pkg.title} />
           </div>
           <div className="thumbnails-row">
             {pkg.gallery.map((img, idx) => (
@@ -489,7 +542,11 @@ const PackageOverviewPage = () => {
             {pkg.locations.map(loc => (
               <span className="loc-tag" key={loc}>{loc}</span>
             ))}
-            <button style={{background:'none',border:'none',color:'white',marginLeft:'auto',cursor:'pointer'}}>
+            <button 
+              onClick={handleShare}
+              style={{background:'none',border:'none',color:'white',marginLeft:'auto',cursor:'pointer'}}
+              title="Share Package"
+            >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
             </button>
           </div>
@@ -497,7 +554,7 @@ const PackageOverviewPage = () => {
           <h1 className="pkg-title-big">{pkg.title}</h1>
           
           <div className="stats-row">
-            <span className="stat-rating">★ {pkg.rating}</span>
+            <span className="stat-rating">Rating: {pkg.rating}</span>
             <span>|</span>
             <span>{pkg.bookings} Bookings</span>
           </div>
@@ -512,14 +569,20 @@ const PackageOverviewPage = () => {
 
           <div className="spec-boxes">
             <div className="spec-box">
-              <span style={{fontSize:'1.5rem'}}>⏱</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{color:'var(--primary, #c6ff00)'}}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
               <div>
                 <p className="spec-label">Duration</p>
                 <p className="spec-val">{pkg.duration}</p>
               </div>
             </div>
             <div className="spec-box">
-              <span style={{fontSize:'1.5rem'}}>✈️</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{color:'var(--primary, #c6ff00)'}}>
+                <path d="M22 2 11 13"></path>
+                <path d="M22 2 15 22 11 13 2 9 22 2z"></path>
+              </svg>
               <div>
                 <p className="spec-label">Type</p>
                 <p className="spec-val">{pkg.type}</p>
@@ -529,13 +592,12 @@ const PackageOverviewPage = () => {
 
           <div className="cta-group">
             <button className="book-btn-link">
-              Book Now <span>→</span>
+              Book Now <span>-&gt;</span>
             </button>
-            <button className="ask-btn-outline">Ask a Question</button>
           </div>
 
           <p className="cancellation-note">
-            ✓ Free cancellation up to 48 hours before trip
+            Free cancellation up to 48 hours before trip
           </p>
         </div>
       </section>
@@ -566,7 +628,12 @@ const PackageOverviewPage = () => {
 
               <div className="love-box">
                 <div className="love-box-title">
-                  <span style={{fontSize:'1.2rem'}}>ℹ️</span> Why travelers love this
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  Why travelers love this
                 </div>
                 <ul className="love-list">
                   {pkg.highlights.map((item, i) => (
@@ -599,13 +666,13 @@ const PackageOverviewPage = () => {
                 <div>
                   <h4 style={{color:'var(--primary)', marginBottom:'1.5rem', textTransform:'uppercase', fontSize:'0.8rem', letterSpacing:'1px'}}>Inclusions</h4>
                   <ul style={{listStyle:'none', display:'flex', flexDirection:'column', gap:'1rem', opacity:0.8}}>
-                    {pkg.inclusions.map((item, i) => <li key={i}>✓ {item}</li>)}
+                    {pkg.inclusions.map((item, i) => <li key={i}>+ {item}</li>)}
                   </ul>
                 </div>
                 <div>
                   <h4 style={{color:'#ff4b4b', marginBottom:'1.5rem', textTransform:'uppercase', fontSize:'0.8rem', letterSpacing:'1px'}}>Exclusions</h4>
                   <ul style={{listStyle:'none', display:'flex', flexDirection:'column', gap:'1rem', opacity:0.6}}>
-                    {pkg.exclusions.map((item, i) => <li key={i}>✕ {item}</li>)}
+                    {pkg.exclusions.map((item, i) => <li key={i}>- {item}</li>)}
                   </ul>
                 </div>
               </div>
@@ -627,3 +694,5 @@ const PackageOverviewPage = () => {
 };
 
 export default PackageOverviewPage;
+
+

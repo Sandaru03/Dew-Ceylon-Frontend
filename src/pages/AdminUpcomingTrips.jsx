@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminUpcomingTrips = () => {
   const [trips, setTrips] = useState([]);
@@ -12,7 +14,7 @@ const AdminUpcomingTrips = () => {
   const fetchTrips = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/upcoming-trips');
+      const res = await fetch(API_BASE_URL + '/api/upcoming-trips');
       const data = await res.json();
       setTrips(data);
     } catch (err) {
@@ -31,7 +33,7 @@ const AdminUpcomingTrips = () => {
     const uploadData = new FormData();
     uploadData.append('image', file);
     try {
-      const res = await fetch('http://localhost:5000/api/upload', { method: 'POST', body: uploadData });
+      const res = await fetch(API_BASE_URL + '/api/upload', { method: 'POST', body: uploadData });
       const data = await res.json();
       if (data.imageUrl) setFormData(prev => ({ ...prev, image: data.imageUrl }));
     } catch (err) {
@@ -50,7 +52,7 @@ const AdminUpcomingTrips = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this trip?')) return;
     try {
-      await fetch(`http://localhost:5000/api/upcoming-trips/${id}`, {
+      await fetch(API_BASE_URL + `/api/upcoming-trips/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -63,8 +65,8 @@ const AdminUpcomingTrips = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingTrip
-      ? `http://localhost:5000/api/upcoming-trips/${editingTrip.id}`
-      : 'http://localhost:5000/api/upcoming-trips';
+      ? API_BASE_URL + `/api/upcoming-trips/${editingTrip.id}`
+      : API_BASE_URL + '/api/upcoming-trips';
     const method = editingTrip ? 'PUT' : 'POST';
     try {
       const res = await fetch(url, {
@@ -310,7 +312,7 @@ const AdminUpcomingTrips = () => {
                 </>
               ) : (
                 <div style={{ padding: '2rem' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>🏔️</div>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>IMG</div>
                   <p style={{ opacity: 0.6, fontWeight: 600 }}>Click to upload cover image</p>
                 </div>
               )}
@@ -341,7 +343,7 @@ const AdminUpcomingTrips = () => {
         </div>
       ) : trips.length === 0 ? (
         <div className="utrip-empty">
-          <div className="utrip-empty-icon">🗺️</div>
+          <div className="utrip-empty-icon">MAP</div>
           <h3>No trips added yet</h3>
           <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>Click "+ Add Trip" to create the first upcoming trip card.</p>
         </div>
@@ -377,3 +379,5 @@ const AdminUpcomingTrips = () => {
 };
 
 export default AdminUpcomingTrips;
+
+

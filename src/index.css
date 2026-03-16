@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap");
 
+html {
+  scroll-behavior: auto; /* Remove smooth scroll from html to let OS handle it */
+  height: 100%;
+}
+
 :root {
   --primary: #b9ff00;
   --bg-dark: #0f0f0f;
@@ -22,6 +27,7 @@ body {
   color: var(--text-white);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Base Styles */
@@ -108,3 +114,119 @@ option {
   background-color: var(--bg-dark);
   color: var(--text-white);
 }
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .admin-main {
+    padding: 2rem 1rem !important;
+  }
+
+  .admin-form-view {
+    padding: 1.2rem !important;
+    border-radius: 22px !important;
+    max-width: 100% !important;
+  }
+
+  .admin-form-view .form-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .admin-form-view .form-header h2 {
+    font-size: 1.45rem !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  .admin-form-view .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .admin-form-view .list-item-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .admin-form-view .btn-primary-admin,
+  .admin-form-view .btn-secondary-admin {
+    width: 100% !important;
+  }
+
+  .pkg-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .pkg-table td,
+  .pkg-table th {
+    padding: 0.9rem 0.8rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .new-footer-section {
+    background-attachment: scroll !important;
+  }
+}
+
+/* Performance-oriented overrides for smoother scroll on lower-power devices */
+@media (max-width: 1024px) {
+  .discount-badge,
+  .badge-text,
+  .wa-button,
+  .wa-button::before,
+  .scroll-arrow,
+  .exp-plane-icon,
+  .ab-discount-group {
+    animation: none !important;
+  }
+
+  .ut-slider-wrapper {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ut-slider-wrapper:hover .ut-cards-track {
+    animation-play-state: running;
+  }
+
+  .ut-cards-track {
+    animation: marquee-scroll 28s linear infinite !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .glass-card,
+  .glass-capsule,
+  .glass-card-dark {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Removed contain: layout style to prevent stacking context issues */

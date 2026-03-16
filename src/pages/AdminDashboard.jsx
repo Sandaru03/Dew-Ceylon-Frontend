@@ -193,6 +193,84 @@ const AdminDashboard = () => {
           letter-spacing: -3px;
           margin-bottom: 1rem;
         }
+
+        @media (max-width: 1200px) {
+          .admin-layout {
+            grid-template-columns: 280px 1fr;
+          }
+
+          .admin-main {
+            padding: 2.5rem 2rem;
+          }
+
+          .admin-sidebar {
+            padding: 2rem 1.2rem;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .admin-layout {
+            display: block;
+          }
+
+          .admin-sidebar {
+            position: static;
+            height: auto;
+            padding: 1.1rem;
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          }
+
+          .sidebar-logo-container {
+            margin-bottom: 1rem;
+          }
+
+          .nav-group {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+          }
+
+          .sidebar-link {
+            padding: 0.85rem;
+            font-size: 0.8rem;
+            border-radius: 12px;
+            gap: 0.7rem;
+          }
+
+          .sidebar-link:hover {
+            transform: none;
+          }
+
+          .sidebar-footer {
+            margin-top: 1.1rem;
+            padding-top: 1.1rem;
+          }
+
+          .admin-main {
+            padding: 1.2rem;
+          }
+
+          .welcome-card {
+            padding: 1.5rem;
+            border-radius: 20px;
+          }
+
+          .welcome-title {
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .nav-group {
+            grid-template-columns: 1fr;
+          }
+
+          .user-info {
+            margin-bottom: 1rem;
+          }
+        }
       `}</style>
 
       <aside className="admin-sidebar">

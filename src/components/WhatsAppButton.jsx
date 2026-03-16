@@ -6,7 +6,12 @@ const WhatsAppButton = () => {
   const message = "Hello! I'm interested in booking a tour with Dew Ceylon.";
 
   useEffect(() => {
-    // Show popup after 3 seconds
+    // Keep the helper popup on desktop where there is enough space.
+    if (window.innerWidth <= 768) {
+      setShowPopup(false);
+      return;
+    }
+
     const timer = setTimeout(() => {
       setShowPopup(true);
     }, 3000);
@@ -149,10 +154,22 @@ const WhatsAppButton = () => {
             bottom: 1.5rem;
             right: 1.5rem;
           }
+
+          .whatsapp-popup {
+            display: none;
+          }
+
           .wa-button {
             width: 55px;
             height: 55px;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.28);
+            animation: none;
           }
+
+          .wa-button::before {
+            display: none;
+          }
+
           .wa-button svg {
             width: 30px;
             height: 30px;

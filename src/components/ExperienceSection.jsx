@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import imgMain from '../assets/hero.jpg';
 import imgSub from '../assets/hero4.jpg';
 
 const ExperienceSection = () => {
+  const navigate = useNavigate();
   return (
     <section className="experience-section">
       <style>{`
@@ -44,13 +46,10 @@ const ExperienceSection = () => {
           left: -20px;
           top: -20px;
           color: var(--primary, #c6ff00);
-          /* airplane SVG natural orientation is 45deg top-right,
-             offset-path assumes 0deg is Right. */
-          /* Extended curve with a loop to go behind the image: */
           offset-path: path('M 60 20 C 60 180, 240 120, 240 220 C 240 320, 20 320, 20 220 C 20 120, 150 250, 280 330');
           offset-rotate: auto 45deg; 
           animation: plane-fly-exp 5s linear infinite;
-          will-change: offset-distance, opacity;
+          will-change: offset-distance;
         }
 
         @keyframes plane-fly-exp {
@@ -93,46 +92,6 @@ const ExperienceSection = () => {
           box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
         .exp-sub-img img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* Scalloped badge copied from Explore */
-        .exp-discount-badge {
-          position: absolute;
-          top: 280px;
-          right: -10px;
-          width: 120px;
-          height: 120px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 5;
-          animation: exp-badge-spin 12s linear infinite;
-          will-change: transform;
-        }
-        @keyframes exp-badge-spin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-
-        .exp-badge-bg {
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-        }
-        .exp-badge-text {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          color: #121E2A;
-          text-align: center;
-          animation: exp-badge-counter-spin 12s linear infinite;
-        }
-        @keyframes exp-badge-counter-spin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(-360deg); }
-        }
-        .exp-badge-small { font-size: 0.8rem; font-weight: 700; line-height: 1.2; font-family: 'Caveat', cursive; }
-        .exp-badge-large { font-size: 1.8rem; font-weight: 900; line-height: 1; letter-spacing: -1px; }
 
         /* ─── RIGHT CONTENT ─── */
         .exp-content { padding-right: 2rem; }
@@ -305,19 +264,106 @@ const ExperienceSection = () => {
         }
 
         @media (max-width: 1024px) {
-          .exp-inner { grid-template-columns: 1fr; gap: 4rem; }
-          .exp-collage { height: 500px; max-width: 500px; margin: 0 auto; }
+          .exp-inner { grid-template-columns: 1fr; gap: 3.2rem; }
+          .exp-collage {
+            height: 540px;
+            width: min(100%, 520px);
+            margin: 0 auto;
+          }
+          .exp-main-img {
+            left: 0;
+            width: 78%;
+            height: 88%;
+            border-radius: 32px 32px 88px 32px;
+          }
+          .exp-sub-img {
+            right: 0;
+            bottom: 0;
+            width: 52%;
+            height: 34%;
+            border-width: 6px;
+          }
+          .exp-plane-path {
+            left: -90px;
+            top: 10%;
+            transform: scale(0.85);
+            transform-origin: top left;
+          }
           .exp-content { padding-right: 0; }
           .exp-bg-tower { display: none; }
         }
 
-        @media (max-width: 600px) {
-          .experience-section { padding: 5rem 2rem; }
-          .exp-collage { transform: scale(0.8); height: 420px; left: -20px; }
+        @media (max-width: 768px) {
+          .experience-section { padding: 4.8rem 1.25rem; }
+          .exp-inner { gap: 2.2rem; }
+          .exp-collage {
+            width: min(100%, 360px);
+            height: 430px;
+          }
+          .exp-main-img {
+            width: 84%;
+            height: 82%;
+            border-radius: 24px 24px 64px 24px;
+          }
+          .exp-sub-img {
+            width: 58%;
+            height: 34%;
+            border-width: 4px;
+          }
+          .exp-plane-path { display: none; }
+
+          .exp-pill {
+            font-size: 0.72rem;
+            letter-spacing: 0.6px;
+            margin-bottom: 1rem;
+          }
+          .exp-heading {
+            font-size: 2.1rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+          }
+          .exp-desc {
+            margin-bottom: 1.7rem;
+          }
           .exp-features-grid { grid-template-columns: 1fr; }
+          .exp-feature { gap: 0.8rem; }
+          .exp-feat-icon {
+            width: 44px;
+            height: 44px;
+          }
           .exp-bottom-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
           .exp-award-box { width: 100%; flex-direction: row; gap: 1.5rem; padding: 1rem; text-align: left; }
           .exp-award-icon { margin-bottom: 0; }
+          .exp-cta-btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .experience-section {
+            padding: 4.2rem 1rem;
+          }
+          .exp-collage {
+            width: 100%;
+            height: 380px;
+          }
+          .exp-main-img {
+            width: 86%;
+            height: 80%;
+            border-radius: 20px 20px 52px 20px;
+          }
+          .exp-sub-img {
+            width: 62%;
+            height: 33%;
+          }
+          .exp-heading {
+            font-size: 1.85rem;
+          }
+          .exp-bullet-list li {
+            align-items: flex-start;
+            line-height: 1.45;
+          }
         }
       `}</style>
       
@@ -354,27 +400,6 @@ const ExperienceSection = () => {
             <img src={imgSub} alt="Beach Relax" />
           </div>
 
-          <div className="exp-discount-badge">
-            <svg viewBox="0 0 100 100" className="exp-badge-bg">
-              <polygon
-                fill="#ffffff"
-                points="
-                  50,4    57.8,10.8  67.6,7.5   72.2,16.7
-                  82.5,17.5 83.3,27.8 92.5,32.4  89.2,42.2
-                  96,50   89.2,57.8  92.5,67.6  83.3,72.2
-                  82.5,82.5 72.2,83.3 67.6,92.5  57.8,89.2
-                  50,96   42.2,89.2  32.4,92.5  27.8,83.3
-                  17.5,82.5 16.7,72.2 7.5,67.6   10.8,57.8
-                  4,50    10.8,42.2  7.5,32.4   16.7,27.8
-                  17.5,17.5 27.8,16.7 32.4,7.5   42.2,10.8
-                "
-              />
-            </svg>
-            <div className="exp-badge-text">
-              <span className="exp-badge-small">50%</span>
-              <span className="exp-badge-small">Discount</span>
-            </div>
-          </div>
         </div>
 
         {/* ── RIGHT: CONTENT ── */}
@@ -449,7 +474,7 @@ const ExperienceSection = () => {
                   Expert many variations teacher.
                 </li>
               </ul>
-              <button className="exp-cta-btn" onClick={() => document.getElementById('packages')?.scrollIntoView({ behavior: 'smooth' })}>
+              <button className="exp-cta-btn" onClick={() => navigate('/about')}>
                 Explore More
               </button>
             </div>

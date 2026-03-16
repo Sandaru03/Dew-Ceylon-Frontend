@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 import Footer from '../components/Footer';
 
@@ -12,7 +14,7 @@ const ActivityDetail = () => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/activities/${id}`);
+        const response = await fetch(API_BASE_URL + `/api/activities/${id}`);
         if(response.ok) {
             const data = await response.json();
             // Parse JSON if needed
@@ -70,7 +72,8 @@ const ActivityDetail = () => {
           position: relative;
           display: flex;
           align-items: flex-end;
-          background: url(${activity.image}) center/cover fixed;
+          background: url(${activity.image}) center/cover;
+          will-change: transform;
         }
 
         .activity-hero::before {
@@ -179,11 +182,10 @@ const ActivityDetail = () => {
         .booking-sidebar {
           position: sticky;
           top: 100px;
-          background: rgba(255,255,255,0.03);
+          background: rgba(255,255,255,0.05);
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 30px;
           padding: 3rem;
-          backdrop-filter: blur(20px);
           height: fit-content;
         }
 
@@ -285,3 +287,5 @@ const ActivityDetail = () => {
 };
 
 export default ActivityDetail;
+
+

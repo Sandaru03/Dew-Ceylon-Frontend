@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminFleet = () => {
   const [vehicles, setVehicles] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingVehicle, setEditingVehicle] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -18,7 +21,7 @@ const AdminFleet = () => {
   const fetchVehicles = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/fleet');
+      const response = await fetch(API_BASE_URL + '/api/fleet');
       const data = await response.json();
       setVehicles(data);
     } catch (err) {
@@ -32,10 +35,31 @@ const AdminFleet = () => {
     fetchVehicles();
   }, []);
 
+  const resetForm = () => {
+    setFormData({ image: '', vehicle_type: '', per_km: '', max_person: '' });
+    setImageFile(null);
+    setPreviewImage(null);
+    setEditingVehicle(null);
+    setIsFormOpen(false);
+  };
+
+  const handleEdit = (vehicle) => {
+    setEditingVehicle(vehicle);
+    setFormData({
+      image: vehicle.image || '',
+      vehicle_type: vehicle.vehicle_type || '',
+      per_km: vehicle.per_km || '',
+      max_person: vehicle.max_person || ''
+    });
+    setImageFile(null);
+    setPreviewImage(vehicle.image || null);
+    setIsFormOpen(true);
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this vehicle?')) return;
     try {
-      await fetch(`http://localhost:5000/api/fleet/${id}`, {
+      await fetch(API_BASE_URL + `/api/fleet/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -64,7 +88,7 @@ const AdminFleet = () => {
     uploadData.append('image', imageFile);
 
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(API_BASE_URL + '/api/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
@@ -75,7 +99,7 @@ const AdminFleet = () => {
       if (!response.ok) throw new Error('Image upload failed');
       
       const data = await response.json();
-      return data.imageUrl; // e.g. "http://localhost:5000/uploads/..."
+      return data.imageUrl; // e.g. API_BASE_URL + "/uploads/..."
     } catch (error) {
       console.error("Error uploading image:", error);
       throw error;
@@ -98,8 +122,11 @@ const AdminFleet = () => {
 
       const payload = { ...formData, image: imageUrl };
 
-      const response = await fetch('http://localhost:5000/api/fleet', {
-        method: 'POST',
+      const endpoint = editingVehicle ? API_BASE_URL + `/api/fleet/${editingVehicle.id}` : API_BASE_URL + '/api/fleet';
+      const method = editingVehicle ? 'PUT' : 'POST';
+
+      const response = await fetch(endpoint, {
+        method,
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
@@ -108,10 +135,7 @@ const AdminFleet = () => {
       });
 
       if (response.ok) {
-        setIsFormOpen(false);
-        setFormData({ image: '', vehicle_type: '', per_km: '', max_person: '' });
-        setImageFile(null);
-        setPreviewImage(null);
+        resetForm();
         fetchVehicles();
       }
     } catch (err) {
@@ -235,12 +259,9 @@ const AdminFleet = () => {
         `}</style>
 
         <div className="form-header">
-          <h2>Add Fleet Vehicle</h2>
+          <h2>{editingVehicle ? 'Edit Fleet Vehicle' : 'Add Fleet Vehicle'}</h2>
           <button className="btn-secondary-admin" onClick={() => {
-            setIsFormOpen(false); 
-            setFormData({ image: '', vehicle_type: '', per_km: '', max_person: '' });
-            setImageFile(null);
-            setPreviewImage(null);
+            resetForm();
           }}>Cancel</button>
         </div>
 
@@ -260,7 +281,7 @@ const AdminFleet = () => {
                   <div>Click to upload image</div>
                 </div>
               )}
-              <input type="file" className="file-input-hidden" accept="image/*" onChange={handleImageChange} required={!previewImage} />
+              <input type="file" className="file-input-hidden" accept="image/*" onChange={handleImageChange} required={!previewImage && !formData.image} />
             </div>
           </div>
 
@@ -283,7 +304,7 @@ const AdminFleet = () => {
           </div>
 
           <div style={{marginTop:'5rem', textAlign: 'center'}}>
-            <button type="submit" className="btn-primary-admin">Publish Vehicle</button>
+            <button type="submit" className="btn-primary-admin">{editingVehicle ? 'Update Vehicle' : 'Publish Vehicle'}</button>
           </div>
         </form>
       </div>
@@ -336,6 +357,26 @@ const AdminFleet = () => {
           justify-content: center;
           transition: all 0.3s ease;
         }
+
+        .btn-edit-action {
+          background: rgba(198, 255, 0, 0.08);
+          color: var(--primary, #c6ff00);
+          border: 1px solid rgba(198, 255, 0, 0.2);
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+        }
+
+        .btn-edit-action:hover {
+          background: var(--primary, #c6ff00);
+          color: black;
+          transform: translateY(-2px);
+        }
         .btn-delete-action:hover {
           background: #ff4b4b;
           color: white;
@@ -386,7 +427,13 @@ const AdminFleet = () => {
                 </td>
                 <td style={{fontWeight: 900, color: 'var(--primary, #c6ff00)', fontSize: '1.2rem'}}>{vehicle.per_km}</td>
                 <td>
-                  <div style={{display: 'flex'}}>
+                  <div style={{display: 'flex', gap: '0.6rem'}}>
+                    <button className="btn-edit-action" onClick={() => handleEdit(vehicle)} title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
+                      </svg>
+                    </button>
                     <button className="btn-delete-action" onClick={() => handleDelete(vehicle.id)} title="Delete">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="3 6 5 6 21 6"></polyline>
@@ -414,3 +461,5 @@ const AdminFleet = () => {
 };
 
 export default AdminFleet;
+
+

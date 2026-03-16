@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 import Footer from "../components/Footer";
 
@@ -12,6 +14,7 @@ const PackagesPage = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [packages, setPackages] = useState([]);
   const [filteredPackages, setFilteredPackages] = useState([]);
   const [categories, setCategories] = useState(["All"]);
@@ -20,7 +23,7 @@ const PackagesPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/categories?type=package");
+        const response = await fetch(API_BASE_URL + "/api/categories?type=package");
         const data = await response.json();
         setCategories(["All", ...data.map(cat => cat.name)]);
       } catch (err) {
@@ -35,10 +38,11 @@ const PackagesPage = () => {
     const fetchPackages = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/packages");
+        const response = await fetch(API_BASE_URL + "/api/packages");
         const data = await response.json();
-        setPackages(data);
-        setFilteredPackages(data);
+        const sortedData = [...data].sort((a, b) => b.id - a.id);
+        setPackages(sortedData);
+        setFilteredPackages(sortedData);
       } catch (err) {
         console.error("Failed to fetch packages:", err);
       } finally {
@@ -119,6 +123,42 @@ const PackagesPage = () => {
           background: rgba(15, 15, 15, 0.8);
           backdrop-filter: blur(20px);
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .filter-mobile-head {
+          display: none;
+          width: 100%;
+        }
+
+        .filter-toggle-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          color: white;
+          border-radius: 14px;
+          padding: 0.9rem 1rem;
+          font-weight: 700;
+          font-size: 0.9rem;
+        }
+
+        .filter-toggle-btn svg {
+          transition: transform 0.25s ease;
+        }
+
+        .filter-toggle-btn.open svg {
+          transform: rotate(180deg);
+        }
+
+        .filter-controls {
+          width: 100%;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -288,15 +328,40 @@ const PackagesPage = () => {
         @media (max-width: 1024px) {
           .filter-section {
             padding: 1.5rem 2rem;
-            flex-direction: column;
             top: 70px;
+          }
+          .filter-controls {
+            flex-direction: column;
+            align-items: stretch;
           }
           .pkg-hero-title { font-size: 3rem; }
           .pkg-grid-section { padding: 2rem; }
         }
 
         @media (max-width: 768px) {
-          .category-btns { flex-wrap: wrap; justify-content: center; }
+          .filter-section {
+            display: block;
+            padding: 0.9rem 1rem;
+            gap: 0.2rem;
+          }
+          .filter-mobile-head {
+            display: block;
+          }
+          .filter-controls {
+            display: none;
+          }
+          .filter-controls.open {
+            display: block;
+            padding-top: 0.9rem;
+          }
+          .category-btns {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-height: none;
+            overflow: visible;
+            white-space: normal;
+            margin-bottom: 0.9rem;
+          }
           .search-bar-pkg { width: 100%; }
         }
       `}</style>
@@ -312,36 +377,51 @@ const PackagesPage = () => {
       </section>
 
       <div className="filter-section">
-        <div className="category-btns">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`filter-btn ${activeCategory === cat ? "active" : ""}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-        <div className="search-bar-pkg">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            style={{ opacity: 0.5 }}
+        <div className="filter-mobile-head">
+          <button
+            className={`filter-toggle-btn ${isMobileFilterOpen ? "open" : ""}`}
+            onClick={() => setIsMobileFilterOpen((prev) => !prev)}
+            type="button"
           >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search destination..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+            Filter & Search
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <div className={`filter-controls ${isMobileFilterOpen ? "open" : ""}`}>
+          <div className="category-btns">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`filter-btn ${activeCategory === cat ? "active" : ""}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <div className="search-bar-pkg">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              style={{ opacity: 0.5 }}
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              placeholder="Search destination..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -369,7 +449,7 @@ const PackagesPage = () => {
                     <h3 className="pkg-card-title">{pkg.title}</h3>
                     <div className="pkg-card-meta">
                       <span>{pkg.duration}</span>
-                      <span>{pkg.rating} ★</span>
+                      <span>Rating: {pkg.rating}</span>
                     </div>
                     <div className="pkg-card-price">
                       {pkg.price.toString().startsWith("$")
@@ -409,3 +489,5 @@ const PackagesPage = () => {
 };
 
 export default PackagesPage;
+
+

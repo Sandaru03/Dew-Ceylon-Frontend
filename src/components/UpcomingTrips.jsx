@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const UpcomingTrips = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
-  const sliderRef = useRef(null);
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/upcoming-trips');
+        const res = await fetch(API_BASE_URL + '/api/upcoming-trips');
         const data = await res.json();
         setTrips(data);
       } catch (err) {
@@ -33,7 +34,7 @@ const UpcomingTrips = () => {
           overflow: hidden;
         }
 
-        /* ── Advanced Background Effects ── */
+        /* â”€â”€ Advanced Background Effects â”€â”€ */
         .ut-premium-bg::before {
           content: '';
           position: absolute;
@@ -70,7 +71,7 @@ const UpcomingTrips = () => {
           z-index: 1;
         }
 
-        /* ── Layout ── */
+        /* â”€â”€ Layout â”€â”€ */
         .ut-container {
           max-width: 1400px;
           margin: 0 auto;
@@ -179,18 +180,21 @@ const UpcomingTrips = () => {
           width: max-content;
           animation: marquee-scroll 30s linear infinite;
           will-change: transform;
+          transform: translate3d(0, 0, 0);
         }
 
-        .ut-slider-wrapper:hover .ut-cards-track {
-          animation-play-state: paused;
+        @media (hover: hover) and (pointer: fine) {
+          .ut-slider-wrapper:hover .ut-cards-track {
+            animation-play-state: paused;
+          }
         }
 
         @keyframes marquee-scroll {
           0% {
-            transform: translateX(0);
+            transform: translate3d(0, 0, 0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translate3d(-50%, 0, 0);
           }
         }
         
@@ -323,6 +327,7 @@ const UpcomingTrips = () => {
           .ut-premium-bg { padding: 5rem 2rem; }
           .ut-title { font-size: 2.8rem; }
           .ut-card { flex: 0 0 280px; height: 380px; }
+          .ut-cards-track { animation-duration: 24s; }
         }
       `}</style>
       
@@ -340,12 +345,6 @@ const UpcomingTrips = () => {
             Secure your spot now for these exclusive, limited-group adventures 
             across the most beautiful landscapes in Ceylon.
           </p>
-          <button className="ut-btn">
-            View Schedule
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </button>
         </div>
 
         {/* Carousel */}
@@ -354,8 +353,7 @@ const UpcomingTrips = () => {
         ) : (
           <div className="ut-slider-wrapper">
             <div 
-              className="ut-cards-track" 
-              ref={sliderRef}
+              className="ut-cards-track"
             >
               {/* Original cards */}
               {trips.map((trip, index) => (
@@ -402,3 +400,5 @@ const UpcomingTrips = () => {
 };
 
 export default UpcomingTrips;
+
+

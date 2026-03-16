@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const PopularPackages = () => {
   const [packages, setPackages] = useState([]);
@@ -9,7 +11,7 @@ const PopularPackages = () => {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/featured-packages');
+        const res = await fetch(API_BASE_URL + '/api/featured-packages');
         const data = await res.json();
         setPackages(data);
       } catch (err) {
@@ -213,3 +215,5 @@ const PackageCard = ({ data, onView }) => {
 };
 
 export default PopularPackages;
+
+

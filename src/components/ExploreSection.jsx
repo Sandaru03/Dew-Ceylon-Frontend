@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import img1 from '../assets/hero.jpg';
 import img2 from '../assets/hero2.jpg';
 import img3 from '../assets/hero4.jpg';
@@ -6,6 +7,7 @@ import blobBg from '../assets/hero3.jpg';
 
 const ExploreSection = () => {
   const sectionRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -413,7 +415,7 @@ const ExploreSection = () => {
           </ul>
 
           <div className="explore-actions">
-            <button className="book-now-solid">Book Now</button>
+            <button className="book-now-solid" onClick={() => navigate('/contact')}>Book Now</button>
             <div className="explore-contact">
               <div className="phone-icon">
                 <svg viewBox="0 0 24 24" fill="var(--primary)" width="24" height="24">
@@ -421,7 +423,7 @@ const ExploreSection = () => {
                 </svg>
               </div>
               <div className="phone-details">
-                <span className="phone-number">410-123-4597</span>
+                <span className="phone-number">94 76 670 9935</span>
                 <span className="phone-label">CALL NOW</span>
               </div>
             </div>

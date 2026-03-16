@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 import Footer from '../components/Footer';
 
@@ -10,6 +12,7 @@ const Blog = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [blogs, setBlogs] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [categories, setCategories] = useState(['All']);
@@ -18,7 +21,7 @@ const Blog = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/categories?type=blog");
+        const response = await fetch(API_BASE_URL + "/api/categories?type=blog");
         const data = await response.json();
         setCategories(["All", ...data.map(cat => cat.name)]);
       } catch (err) {
@@ -33,7 +36,7 @@ const Blog = () => {
     const fetchBlogs = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/blogs');
+        const response = await fetch(API_BASE_URL + '/api/blogs');
         let data = [];
         if(response.ok) {
            data = await response.json();
@@ -116,90 +119,119 @@ const Blog = () => {
           margin: 0 auto;
         }
 
-        .blog-filter-section {
+        .filter-section {
           position: sticky;
           top: 80px;
           z-index: 100;
-          padding: 2rem 5%;
-          background: rgba(15, 15, 15, 0.9);
+          padding: 2rem 4rem;
+          background: rgba(15, 15, 15, 0.8);
           backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
           display: flex;
           justify-content: space-between;
           align-items: center;
+          gap: 2rem;
         }
 
-        .blog-cats {
+        .filter-mobile-head {
+          display: none;
+          width: 100%;
+        }
+
+        .filter-toggle-btn {
+          width: 100%;
           display: flex;
-          gap: 1.5rem;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          color: white;
+          border-radius: 14px;
+          padding: 0.9rem 1rem;
+          font-weight: 700;
+          font-size: 0.9rem;
+        }
+
+        .filter-toggle-btn svg {
+          transition: transform 0.25s ease;
+        }
+
+        .filter-toggle-btn.open svg {
+          transform: rotate(180deg);
+        }
+
+        .filter-controls {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .category-btns {
+          display: flex;
+          gap: 1rem;
           overflow-x: auto;
           white-space: nowrap;
-          padding-bottom: 0.5rem;
         }
 
-        .blog-cats::-webkit-scrollbar {
+        .category-btns::-webkit-scrollbar {
           height: 4px;
         }
         
-        .blog-cats::-webkit-scrollbar-thumb {
+        .category-btns::-webkit-scrollbar-thumb {
           background: rgba(255,255,255,0.2);
           border-radius: 10px;
         }
 
-        .cat-btn {
-          background: transparent;
-          border: none;
-          color: rgba(255,255,255,0.5);
-          cursor: pointer;
-          font-size: 1.1rem;
-          font-weight: 700;
-          transition: all 0.3s ease;
-          position: relative;
-        }
-
-        .cat-btn:hover {
+        .filter-btn {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           color: white;
+          padding: 0.8rem 1.5rem;
+          border-radius: 30px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          font-weight: 500;
+          transition: all 0.3s ease;
         }
 
-        .cat-btn.active {
-          color: var(--primary, #c6ff00);
+        .filter-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
         }
 
-        .cat-btn.active::after {
-          content: '';
-          position: absolute;
-          bottom: -8px;
-          left: 0;
-          width: 50%;
-          height: 2px;
+        .filter-btn.active {
           background: var(--primary, #c6ff00);
-          border-radius: 2px;
+          color: black;
+          border-color: var(--primary, #c6ff00);
         }
 
-        .blog-search {
+        .search-bar-pkg {
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 50px;
-          padding: 0.8rem 1.5rem;
+          padding: 0.5rem 1.5rem;
           display: flex;
           align-items: center;
           gap: 1rem;
-          width: 350px;
+          width: 300px;
           transition: all 0.3s ease;
         }
 
-        .blog-search:focus-within {
+        .search-bar-pkg:focus-within {
           border-color: var(--primary, #c6ff00);
           background: rgba(255,255,255,0.05);
         }
 
-        .blog-search input {
+        .search-bar-pkg input {
           background: transparent;
           border: none;
           color: white;
           width: 100%;
           outline: none;
           font-size: 1rem;
+          padding: 0.5rem;
         }
 
         .blog-grid-container {
@@ -332,17 +364,47 @@ const Blog = () => {
         }
 
         @media (max-width: 1024px) {
-           .blog-filter-section {
-             flex-direction: column;
-             gap: 2rem;
-             align-items: flex-start;
+           .filter-section {
+             padding: 1.5rem 2rem;
+             top: 70px;
            }
-           .blog-search {
+           .filter-controls {
+             flex-direction: column;
+             align-items: stretch;
+             gap: 1.2rem;
+           }
+           .search-bar-pkg {
              width: 100%;
            }
            .blog-hero-title {
              font-size: 3.5rem;
            }
+        }
+
+        @media (max-width: 768px) {
+          .filter-section {
+            display: block;
+            padding: 0.9rem 1rem;
+            gap: 0.2rem;
+          }
+          .filter-mobile-head {
+            display: block;
+          }
+          .filter-controls {
+            display: none;
+          }
+          .filter-controls.open {
+            display: block;
+            padding-top: 0.9rem;
+          }
+          .category-btns {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-height: none;
+            overflow: visible;
+            white-space: normal;
+            margin-bottom: 0.9rem;
+          }
         }
       `}</style>
 
@@ -355,29 +417,44 @@ const Blog = () => {
         </div>
       </section>
 
-      <div className="blog-filter-section">
-        <div className="blog-cats">
-          {categories.map(cat => (
-            <button 
-              key={cat}
-              className={`cat-btn ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+      <div className="filter-section">
+        <div className="filter-mobile-head">
+          <button
+            className={`filter-toggle-btn ${isMobileFilterOpen ? 'open' : ''}`}
+            onClick={() => setIsMobileFilterOpen((prev) => !prev)}
+            type="button"
+          >
+            Filter & Search
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
         </div>
-        <div className="blog-search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{opacity: 0.5}}>
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input 
-            type="text" 
-            placeholder="Search stories..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+
+        <div className={`filter-controls ${isMobileFilterOpen ? 'open' : ''}`}>
+          <div className="category-btns">
+            {categories.map(cat => (
+              <button 
+                key={cat}
+                className={`filter-btn ${activeCategory === cat ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <div className="search-bar-pkg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{opacity: 0.5}}>
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              placeholder="Search stories..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -435,3 +512,5 @@ const Blog = () => {
 };
 
 export default Blog;
+
+

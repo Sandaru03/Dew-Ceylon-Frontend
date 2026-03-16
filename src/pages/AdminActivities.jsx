@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminActivities = () => {
   const [activities, setActivities] = useState([]);
@@ -16,7 +18,7 @@ const AdminActivities = () => {
   const fetchActivities = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/activities');
+      const response = await fetch(API_BASE_URL + '/api/activities');
       const data = await response.json();
       setActivities(data);
     } catch (err) {
@@ -33,7 +35,7 @@ const AdminActivities = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/categories?type=activity');
+      const response = await fetch(API_BASE_URL + '/api/categories?type=activity');
       const data = await response.json();
       setCategories(data);
     } catch (err) {
@@ -50,7 +52,7 @@ const AdminActivities = () => {
     uploadData.append('image', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(API_BASE_URL + '/api/upload', {
         method: 'POST',
         body: uploadData
       });
@@ -95,7 +97,7 @@ const AdminActivities = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this activity?')) return;
     try {
-      await fetch(`http://localhost:5000/api/activities/${id}`, {
+      await fetch(API_BASE_URL + `/api/activities/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -107,7 +109,7 @@ const AdminActivities = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = editingActivity ? `http://localhost:5000/api/activities/${editingActivity.id}` : 'http://localhost:5000/api/activities';
+    const url = editingActivity ? API_BASE_URL + `/api/activities/${editingActivity.id}` : API_BASE_URL + '/api/activities';
     const method = editingActivity ? 'PUT' : 'POST';
 
     try {
@@ -243,7 +245,7 @@ const AdminActivities = () => {
                     <div style={{flex: 1}}>
                       <div style={{display: 'flex', gap: '1rem', marginBottom: '1rem'}}>
                         <input style={{flex: 1}} value={item.title} onChange={(e) => updateItem(i, 'title', e.target.value)} placeholder="Item Title (e.g. Early Morning Departure)" />
-                        <button type="button" className="remove-btn" onClick={() => removeItem(i)}>✕</button>
+                        <button type="button" className="remove-btn" onClick={() => removeItem(i)}>x</button>
                       </div>
                       <textarea rows="2" value={item.description} onChange={(e) => updateItem(i, 'description', e.target.value)} placeholder="Item Description..." />
                     </div>
@@ -370,3 +372,6 @@ const AdminActivities = () => {
 };
 
 export default AdminActivities;
+
+
+

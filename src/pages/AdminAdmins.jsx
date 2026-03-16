@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminAdmins = () => {
   const [admins, setAdmins] = useState([]);
@@ -9,7 +11,7 @@ const AdminAdmins = () => {
   const fetchAdmins = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth', {
+      const response = await fetch(API_BASE_URL + '/api/auth', {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
       const data = await response.json();
@@ -28,7 +30,7 @@ const AdminAdmins = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(API_BASE_URL + '/api/auth/register', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ const AdminAdmins = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to remove this administrator?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/${id}`, {
+      const response = await fetch(API_BASE_URL + `/api/auth/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -271,7 +273,7 @@ const AdminAdmins = () => {
             <form onSubmit={handleSubmit}>
               <div className="form-group"><label>Full Name</label><input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required placeholder="John Doe" /></div>
               <div className="form-group"><label>Email Address</label><input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required placeholder="john@dewceylon.com" /></div>
-              <div className="form-group"><label>Initial Password</label><input type="password" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} required placeholder="••••••••" /></div>
+              <div className="form-group"><label>Initial Password</label><input type="password" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} required placeholder="********" /></div>
               <div style={{display:'flex', gap:'1.5rem', marginTop:'3rem'}}>
                 <button type="submit" className="btn-primary-admin" style={{flex:1}}>Create Account</button>
                 <button type="button" className="btn-secondary-admin" onClick={() => setIsFormOpen(false)}>Cancel</button>
@@ -285,3 +287,5 @@ const AdminAdmins = () => {
 };
 
 export default AdminAdmins;
+
+

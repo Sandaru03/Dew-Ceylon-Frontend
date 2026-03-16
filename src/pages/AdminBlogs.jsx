@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminBlogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -18,7 +20,7 @@ const AdminBlogs = () => {
   const fetchBlogs = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/blogs');
+      const response = await fetch(API_BASE_URL + '/api/blogs');
       const data = await response.json();
       setBlogs(data);
     } catch (err) {
@@ -35,7 +37,7 @@ const AdminBlogs = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/categories?type=blog');
+      const response = await fetch(API_BASE_URL + '/api/categories?type=blog');
       const data = await response.json();
       setCategories(data);
     } catch (err) {
@@ -52,7 +54,7 @@ const AdminBlogs = () => {
     uploadData.append('image', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(API_BASE_URL + '/api/upload', {
         method: 'POST',
         body: uploadData
       });
@@ -97,7 +99,7 @@ const AdminBlogs = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this story?')) return;
     try {
-      await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      await fetch(API_BASE_URL + `/api/blogs/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
       });
@@ -115,7 +117,7 @@ const AdminBlogs = () => {
 
     const submitData = { ...formData, anchor: finalAnchor };
 
-    const url = editingBlog ? `http://localhost:5000/api/blogs/${editingBlog.id}` : 'http://localhost:5000/api/blogs';
+    const url = editingBlog ? API_BASE_URL + `/api/blogs/${editingBlog.id}` : API_BASE_URL + '/api/blogs';
     const method = editingBlog ? 'PUT' : 'POST';
 
     try {
@@ -366,3 +368,5 @@ const AdminBlogs = () => {
 };
 
 export default AdminBlogs;
+
+

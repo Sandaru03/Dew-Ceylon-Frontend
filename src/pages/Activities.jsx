@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 import Footer from '../components/Footer';
 import heroBg from '../assets/hero.jpg';
@@ -8,6 +10,7 @@ const Activities = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [categories, setCategories] = useState(['All']);
@@ -16,7 +19,7 @@ const Activities = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/categories?type=activity");
+        const response = await fetch(API_BASE_URL + "/api/categories?type=activity");
         const data = await response.json();
         setCategories(["All", ...data.map(cat => cat.name)]);
       } catch (err) {
@@ -31,7 +34,7 @@ const Activities = () => {
     const fetchActivities = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/activities');
+        const response = await fetch(API_BASE_URL + '/api/activities');
         let data = [];
         if(response.ok) {
            data = await response.json();
@@ -79,7 +82,8 @@ const Activities = () => {
           align-items: center;
           justify-content: center;
           text-align: center;
-          background: url(${heroBg}) center/cover fixed;
+          background: url(${heroBg}) center/cover;
+          will-change: transform;
         }
 
         .pkg-hero::before {
@@ -115,9 +119,44 @@ const Activities = () => {
           top: 80px;
           z-index: 100;
           padding: 2rem 4rem;
-          background: rgba(15, 15, 15, 0.8);
-          backdrop-filter: blur(20px);
+          background: rgba(15, 15, 15, 0.95);
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .filter-mobile-head {
+          display: none;
+          width: 100%;
+        }
+
+        .filter-toggle-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          color: white;
+          border-radius: 14px;
+          padding: 0.9rem 1rem;
+          font-weight: 700;
+          font-size: 0.9rem;
+        }
+
+        .filter-toggle-btn svg {
+          transition: transform 0.25s ease;
+        }
+
+        .filter-toggle-btn.open svg {
+          transform: rotate(180deg);
+        }
+
+        .filter-controls {
+          width: 100%;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -190,6 +229,7 @@ const Activities = () => {
           background: #1a1a1a;
           transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
           border: 1px solid rgba(255, 255, 255, 0.05);
+          will-change: transform;
         }
 
         .modern-pkg-card:hover {
@@ -278,15 +318,40 @@ const Activities = () => {
         @media (max-width: 1024px) {
           .filter-section {
             padding: 1.5rem 2rem;
-            flex-direction: column;
             top: 70px;
+          }
+          .filter-controls {
+            flex-direction: column;
+            align-items: stretch;
           }
           .pkg-hero-title { font-size: 3rem; }
           .pkg-grid-section { padding: 2rem; }
         }
 
         @media (max-width: 768px) {
-          .category-btns { flex-wrap: wrap; justify-content: center; }
+          .filter-section {
+            display: block;
+            padding: 0.9rem 1rem;
+            gap: 0.2rem;
+          }
+          .filter-mobile-head {
+            display: block;
+          }
+          .filter-controls {
+            display: none;
+          }
+          .filter-controls.open {
+            display: block;
+            padding-top: 0.9rem;
+          }
+          .category-btns {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-height: none;
+            overflow: visible;
+            white-space: normal;
+            margin-bottom: 0.9rem;
+          }
           .search-bar-pkg { width: 100%; }
         }
       `}</style>
@@ -301,28 +366,43 @@ const Activities = () => {
       </section>
 
       <div className="filter-section">
-        <div className="category-btns">
-          {categories.map(cat => (
-            <button 
-              key={cat}
-              className={`filter-btn ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="filter-mobile-head">
+          <button
+            className={`filter-toggle-btn ${isMobileFilterOpen ? 'open' : ''}`}
+            onClick={() => setIsMobileFilterOpen((prev) => !prev)}
+            type="button"
+          >
+            Filter & Search
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
         </div>
-        <div className="search-bar-pkg">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{opacity: 0.5}}>
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input 
-            type="text" 
-            placeholder="Search activities..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+
+        <div className={`filter-controls ${isMobileFilterOpen ? 'open' : ''}`}>
+          <div className="category-btns">
+            {categories.map(cat => (
+              <button 
+                key={cat}
+                className={`filter-btn ${activeCategory === cat ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <div className="search-bar-pkg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{opacity: 0.5}}>
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              placeholder="Search activities..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -371,3 +451,5 @@ const Activities = () => {
 };
 
 export default Activities;
+
+

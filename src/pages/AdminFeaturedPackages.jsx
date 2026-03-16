@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const AdminFeaturedPackages = () => {
   const [allPackages, setAllPackages] = useState([]);
@@ -12,14 +14,14 @@ const AdminFeaturedPackages = () => {
       try {
         const token = localStorage.getItem('adminToken');
         const [pkgRes, featuredRes] = await Promise.all([
-          fetch('http://localhost:5000/api/packages'),
-          fetch('http://localhost:5000/api/featured-packages/ids', {
+          fetch(API_BASE_URL + '/api/packages'),
+          fetch(API_BASE_URL + '/api/featured-packages/ids', {
             headers: { 'Authorization': `Bearer ${token}` }
           })
         ]);
         const packages = await pkgRes.json();
         const featuredIds = await featuredRes.json();
-        setAllPackages(packages);
+        setAllPackages([...packages].sort((a, b) => b.id - a.id));
         setSelectedIds(featuredIds);
       } catch (err) {
         console.error(err);
@@ -63,7 +65,7 @@ const AdminFeaturedPackages = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch('http://localhost:5000/api/featured-packages', {
+      const res = await fetch(API_BASE_URL + '/api/featured-packages', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -314,11 +316,11 @@ const AdminFeaturedPackages = () => {
         <div className="fp-layout">
           {/* Left: All packages grid */}
           <div>
-            <p className="fp-all-title">All Packages — click to select/deselect</p>
+            <p className="fp-all-title">All Packages - click to select/deselect</p>
             {allPackages.length === 0 ? (
               <div className="fp-pkg-grid">
                 <div className="fp-no-packages">
-                  <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>📦</p>
+                  <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>No Items</p>
                   <p>No packages found. Add packages in the Journeys section first.</p>
                 </div>
               </div>
@@ -340,7 +342,7 @@ const AdminFeaturedPackages = () => {
                       )}
                       <div className="fp-pkg-tile-overlay">
                         <p className="fp-pkg-tile-name">{pkg.title}</p>
-                        <p className="fp-pkg-tile-dur">{pkg.duration} · {pkg.category}</p>
+                        <p className="fp-pkg-tile-dur">{pkg.duration} | {pkg.category}</p>
                       </div>
                       {isSelected ? (
                         <div className="fp-checkmark">#{slotIndex + 1}</div>
@@ -369,7 +371,7 @@ const AdminFeaturedPackages = () => {
                 if (!pkg) {
                   return (
                     <div key={slotIdx} className="fp-slot empty">
-                      <span style={{ fontSize: '0.82rem', fontWeight: 700 }}>Slot {slotIdx + 1} — empty</span>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 700 }}>Slot {slotIdx + 1} - empty</span>
                     </div>
                   );
                 }
@@ -379,17 +381,17 @@ const AdminFeaturedPackages = () => {
                     {pkg.image && <img src={pkg.image} alt={pkg.title} className="fp-slot-img" />}
                     <div className="fp-slot-info">
                       <div className="fp-slot-name">{pkg.title}</div>
-                      <div className="fp-slot-cat">{pkg.category} · {pkg.duration}</div>
+                      <div className="fp-slot-cat">{pkg.category} | {pkg.duration}</div>
                     </div>
                     <div className="fp-slot-actions">
-                      <button className="fp-arr-btn" onClick={() => moveUp(slotIdx)} title="Move up">▲</button>
-                      <button className="fp-arr-btn" onClick={() => moveDown(slotIdx)} title="Move down">▼</button>
+                      <button className="fp-arr-btn" onClick={() => moveUp(slotIdx)} title="Move up">Up</button>
+                      <button className="fp-arr-btn" onClick={() => moveDown(slotIdx)} title="Move down">Down</button>
                     </div>
                     <button
                       className="fp-remove-btn"
                       onClick={() => setSelectedIds(prev => prev.filter(id => id !== pkgId))}
                       title="Remove"
-                    >✕</button>
+                    >x</button>
                   </div>
                 );
               })}
@@ -399,7 +401,7 @@ const AdminFeaturedPackages = () => {
               onClick={handleSave}
               disabled={saving || selectedIds.length !== 4}
             >
-              {saving ? 'Saving...' : saved ? '✓ Saved!' : selectedIds.length < 4 ? `Select ${4 - selectedIds.length} more` : 'Save to Homepage'}
+              {saving ? 'Saving...' : saved ? 'Saved!' : selectedIds.length < 4 ? `Select ${4 - selectedIds.length} more` : 'Save to Homepage'}
             </button>
           </div>
         </div>
@@ -409,3 +411,6 @@ const AdminFeaturedPackages = () => {
 };
 
 export default AdminFeaturedPackages;
+
+
+

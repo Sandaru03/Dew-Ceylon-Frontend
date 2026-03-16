@@ -47,6 +47,12 @@ const HomePage = () => {
           width: 100%;
           overflow-x: hidden;
         }
+
+        .home-page > section:not(.hero),
+        .home-page > footer {
+          content-visibility: auto;
+          contain-intrinsic-size: 900px;
+        }
         
         .hero {
           position: relative;
@@ -79,6 +85,8 @@ const HomePage = () => {
           object-fit: cover;
           z-index: 1;
           transition: opacity 1s ease-in-out;
+          will-change: opacity;
+          transform: translateZ(0);
         }
         
         .hero-bg-overlay {
@@ -180,7 +188,27 @@ const HomePage = () => {
         }
         
         @media (max-width: 768px) {
+          .hero {
+            min-height: 100svh;
+            padding: 0 1.2rem 7vh 1.2rem;
+          }
+
+          .hero-bg {
+            background: #000;
+          }
+
+          .hero-bg-img {
+            object-fit: cover;
+            object-position: center 28%;
+          }
+
+          .main-info {
+            transform: translateY(-5vh);
+          }
+
           .hero-title { font-size: 3rem; }
+          .scroll-indicator { display: none; }
+          .background-text { font-size: 13vw; }
         }
       `}</style>
 

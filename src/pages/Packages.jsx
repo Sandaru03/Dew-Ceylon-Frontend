@@ -1,14 +1,11 @@
 ﻿import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
 import Footer from "../components/Footer";
 
-// Use same assets
-import heroBg from "../assets/hero.jpg";
-import img1 from "../assets/hero2.jpg";
-import img2 from "../assets/hero4.jpg";
+// Optimized Cloudinary image url used directly below
 
 const PackagesPage = () => {
   const navigate = useNavigate();
@@ -19,6 +16,15 @@ const PackagesPage = () => {
   const [filteredPackages, setFilteredPackages] = useState([]);
   const [categories, setCategories] = useState(["All"]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchParam = params.get("search");
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -84,7 +90,10 @@ const PackagesPage = () => {
           align-items: center;
           justify-content: center;
           text-align: center;
-          background: url(${heroBg}) center/cover fixed;
+          background-image: url("https://res.cloudinary.com/dicvgtusz/image/upload/v1774240427/hero_1_hqhomo.jpg");
+          background-position: center;
+          background-size: cover;
+          background-attachment: fixed;
         }
 
         .pkg-hero::before {
@@ -363,15 +372,22 @@ const PackagesPage = () => {
             margin-bottom: 0.9rem;
           }
           .search-bar-pkg { width: 100%; }
+          .pkg-grid {
+            grid-template-columns: 1fr;
+            justify-items: center;
+          }
+          .modern-pkg-card {
+            width: 100%;
+            max-width: 420px;
+          }
         }
       `}</style>
 
       <section className="pkg-hero">
         <div className="pkg-hero-content animate-fade-in-up">
-          <h1 className="pkg-hero-title">Curated Journeys</h1>
+          <h1 className="pkg-hero-title">Find Your Perfect Journey</h1>
           <p className="pkg-hero-subtitle">
-            Explore our collection of hand-picked experiences designed for the
-            conscious traveler. From the wild savannahs to misty tea estates.
+            These are the journeys travelers choose again and again the perfect mix of Sri Lanka’s most iconic highlights and unforgettable hidden moments.
           </p>
         </div>
       </section>
@@ -439,7 +455,7 @@ const PackagesPage = () => {
                   key={pkg.id}
                 >
                   <img
-                    src={pkg.image}
+                    src={pkg.image || undefined}
                     alt={pkg.title}
                     className="pkg-card-img"
                   />

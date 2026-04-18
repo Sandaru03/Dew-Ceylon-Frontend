@@ -97,6 +97,29 @@ const Loader = ({ onFinish }) => {
           to { opacity: 0.8; transform: translateY(0); }
         }
 
+        .loader-text-wrap {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.8rem;
+        }
+
+        .loader-subtext {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.75rem;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.5);
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          opacity: 0;
+          transform: translateY(10px);
+          animation: subtext-reveal 0.8s ease forwards 1.8s;
+        }
+
+        @keyframes subtext-reveal {
+          to { opacity: 1; transform: translateY(0); }
+        }
+
         .loader-progress-track {
           width: 200px;
           height: 2px;
@@ -156,16 +179,21 @@ const Loader = ({ onFinish }) => {
           <img src="/Dewlogo.jpg" alt="Logo" className="loader-logo" />
         </div>
 
-        <div className="loader-text">
-          {text.split("").map((char, i) => (
-            <span 
-              key={i} 
-              className="char" 
-              style={{ animationDelay: `${0.8 + i * 0.1}s` }}
-            >
-              {char === " " ? "\u00A0" : char}
-            </span>
-          ))}
+        <div className="loader-text-wrap">
+          <div className="loader-text">
+            {text.split("").map((char, i) => (
+              <span 
+                key={i} 
+                className="char" 
+                style={{ animationDelay: `${0.8 + i * 0.1}s` }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </div>
+          <div className="loader-subtext">
+            Your Next Great Adventure
+          </div>
         </div>
 
         <div className="loader-progress-track">

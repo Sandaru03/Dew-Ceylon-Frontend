@@ -24,6 +24,7 @@ const AppContent = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
+  const isAboutPage = location.pathname === '/about';
 
   return (
     <>
@@ -36,13 +37,15 @@ const AppContent = () => {
         }
       `}</style>
       
-      {!isAdmin && (
+      {!isAdmin && !isAboutPage && (
         <>
           {loading && <Loader onFinish={() => setLoading(false)} />}
           <Navbar />
           <WhatsAppButton />
         </>
       )}
+
+      {isAboutPage && loading && <Loader onFinish={() => setLoading(false)} />}
 
       <Suspense fallback={<div style={{background: '#0F0F0F', height: '100vh', width: '100vw'}}></div>}>
         <Routes>

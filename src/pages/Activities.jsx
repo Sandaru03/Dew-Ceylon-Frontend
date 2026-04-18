@@ -4,7 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
 import Footer from '../components/Footer';
-import heroBg from '../assets/hero.jpg';
+
 
 const Activities = () => {
   const navigate = useNavigate();
@@ -82,7 +82,9 @@ const Activities = () => {
           align-items: center;
           justify-content: center;
           text-align: center;
-          background: url(${heroBg}) center/cover;
+          background-image: url("https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_30,w_1400/v1772526396/theres-no-taming-rapids-only-going-with-flow-shot-group-young-male-friends-white-water-rafting_rd0fxv.jpg");
+          background-position: center;
+          background-size: cover;
           will-change: transform;
         }
 
@@ -353,6 +355,14 @@ const Activities = () => {
             margin-bottom: 0.9rem;
           }
           .search-bar-pkg { width: 100%; }
+          .pkg-grid {
+            grid-template-columns: 1fr;
+            justify-items: center;
+          }
+          .modern-pkg-card {
+            width: 100%;
+            max-width: 420px;
+          }
         }
       `}</style>
 
@@ -360,7 +370,7 @@ const Activities = () => {
         <div className="pkg-hero-content animate-fade-in-up">
           <h1 className="pkg-hero-title">Experience Sri Lanka</h1>
           <p className="pkg-hero-subtitle">
-            Dive into unforgettable activities designed to connect you with the heart of Ceylon.
+            Discover handpicked, scam free experiences worth every cent. Choose your pace with private or shared tours. Our trusted local guides share hidden gems, pure, unrushed passion, and authentic stories you can’t Google.
           </p>
         </div>
       </section>
@@ -416,7 +426,7 @@ const Activities = () => {
             <div className="pkg-grid">
               {filteredActivities.map(activity => (
                 <div className="modern-pkg-card animate-fade-in-up" key={activity.id}>
-                  <img src={activity.image} alt={activity.title} className="pkg-card-img" />
+                  <img src={activity.image || undefined} alt={activity.title} className="pkg-card-img" />
                   <div className="pkg-card-overlay"></div>
                   <div className="pkg-card-content">
                     <span className="pkg-card-badge">{activity.category}</span>

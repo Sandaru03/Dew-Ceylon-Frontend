@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from 'react';
 
-import heroBg from '../assets/hero.jpg';
-import heroBg2 from '../assets/hero2.jpg';
-import heroBg3 from '../assets/hero4.jpg';
 import ExploreSection from '../components/ExploreSection';
 import Destinations from '../components/Destinations';
 import ExperienceSection from '../components/ExperienceSection';
+import Reviews from '../components/Reviews';
 import UpcomingTrips from '../components/UpcomingTrips';
 import PopularPackages from '../components/PopularPackages';
+import TaxiSection from '../components/TaxiSection';
 import Footer from '../components/Footer';
 
 const slides = [
   {
-    image: heroBg,
+    image: 'https://res.cloudinary.com/dicvgtusz/image/upload/v1774245819/tommaso-delton-_sFOJHDmO6A-unsplash_bapicv.jpg',
     bgText: 'EXPLORER',
     titleMain: 'Safari Dreams',
-    titleSub: 'Wild Realities'
+    titleSub: 'Wild Realities',
+    objectPosition: '35% center'
   },
   {
-    image: heroBg3,
-    bgText: 'HERITAGE',
-    titleMain: 'Iconic Views',
-    titleSub: 'Nine Arch Bridge'
-  },
-  {
-    image: heroBg2,
+    image: 'https://res.cloudinary.com/dicvgtusz/image/upload/v1774243228/hero2_2_1_kq3qmc.jpg',
     bgText: 'ADVENTURE',
     titleMain: 'Discover The',
-    titleSub: 'Untamed Beauty'
+    titleSub: 'Untamed Beauty',
+    objectPosition: 'center center'
+  },
+  {
+    image: 'https://res.cloudinary.com/dicvgtusz/image/upload/v1774240526/demodara-nine-arch-bridge-ella-sri-lanka.jpg_1_xm706n.jpg',
+    bgText: 'HERITAGE',
+    titleMain: 'Iconic Views',
+    titleSub: 'Nine Arch Bridge',
+    objectPosition: 'center center'
   }
 ];
 
@@ -199,7 +201,6 @@ const HomePage = () => {
 
           .hero-bg-img {
             object-fit: cover;
-            object-position: center 28%;
           }
 
           .main-info {
@@ -216,7 +217,18 @@ const HomePage = () => {
       {/* Hero Section Integrated Directly */}
       <section className="hero">
         <div className="hero-bg transition-bg">
-          <img src={slides[currentSlide].image} alt="Safari Background" className="hero-bg-img" />
+          {slides.map((slide, index) => (
+            <img 
+              key={index}
+              src={slide.image} 
+              alt={`Safari Background ${index + 1}`} 
+              className="hero-bg-img" 
+              style={{ 
+                objectPosition: slide.objectPosition || 'center center',
+                opacity: currentSlide === index ? 1 : 0
+              }} 
+            />
+          ))}
           <div className="hero-bg-overlay"></div>
           <div className="overlay"></div>
         </div>
@@ -252,9 +264,11 @@ const HomePage = () => {
 
       <ExploreSection />
       <Destinations />
+      <PopularPackages />
+      <TaxiSection />
+      <Reviews />
       <ExperienceSection />
       <UpcomingTrips />
-      <PopularPackages />
       <Footer />
     </div>
   );

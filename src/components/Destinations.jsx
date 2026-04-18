@@ -12,10 +12,9 @@ const Destinations = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const resp = await fetch(API_BASE_URL + '/api/activities');
+        const resp = await fetch(API_BASE_URL + '/api/featured-activities');
         const data = await resp.json();
-        // Get the latest 4 activities
-        setActivities(data.slice(0, 4));
+        setActivities(Array.isArray(data) ? data : []);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching activities:", err);
@@ -116,14 +115,21 @@ const Destinations = () => {
         .new-dest-card {
           position: relative;
           border-radius: 16px;
-          overflow: hidden;
           height: 250px;
           cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .new-dest-card-inner {
+          position: absolute;
+          inset: 0;
+          border-radius: 16px;
+          overflow: hidden;
           border: 1px solid rgba(255, 255, 255, 0.1);
           transition: all 0.3s ease;
         }
         
-        .new-dest-card.active {
+        .new-dest-card.active .new-dest-card-inner {
           border-color: var(--primary, #c6ff00);
           box-shadow: 0 0 0 1px var(--primary, #c6ff00);
         }
@@ -136,11 +142,11 @@ const Destinations = () => {
           will-change: transform;
         }
         
-        .new-dest-card:hover .new-dest-card-img {
+        .new-dest-card-inner:hover .new-dest-card-img, .new-dest-card:hover .new-dest-card-img {
           transform: scale(1.08);
         }
         
-        .new-dest-card::after {
+        .new-dest-card-inner::after {
           content: '';
           position: absolute;
           bottom: 0;
@@ -194,6 +200,74 @@ const Destinations = () => {
           align-items: center;
           justify-content: center;
         }
+
+        .discount-badge {
+          position: absolute;
+          top: -40px;
+          right: -25px;
+          width: 100px;
+          height: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: badge-spin 10s linear infinite;
+          z-index: 10;
+        }
+
+        @-webkit-keyframes badge-spin {
+          from { -webkit-transform: rotate(0deg); }
+          to   { -webkit-transform: rotate(360deg); }
+        }
+        
+        @keyframes badge-spin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        
+        .badge-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+        }
+        
+        .badge-text {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: #121E2A;
+          font-weight: 900;
+          text-align: center;
+          -webkit-animation: badge-counter-spin 10s linear infinite;
+          animation: badge-counter-spin 10s linear infinite;
+        }
+        
+        @-webkit-keyframes badge-counter-spin {
+          from { -webkit-transform: rotate(0deg);   }
+          to   { -webkit-transform: rotate(-360deg); }
+        }
+        
+        @keyframes badge-counter-spin {
+          from { transform: rotate(0deg);   }
+          to   { transform: rotate(-360deg); }
+        }
+        
+        .badge-small {
+          font-size: 0.55rem;
+          font-weight: 800;
+          line-height: 1.2;
+          letter-spacing: 0px;
+        }
+        
+        .badge-large {
+          font-size: 1.2rem;
+          line-height: 1;
+          margin: 0.1rem 0;
+          letter-spacing: -0.5px;
+        }
         
         @media (max-width: 1024px) {
           .new-dest-container { flex-direction: column; }
@@ -219,9 +293,12 @@ const Destinations = () => {
         <div className="new-dest-content animate-fade-in-up">
           <h2 className="new-dest-title">ACTIVITIES</h2>
           <p className="new-dest-desc">
-            Unleash Your Inner Adventurer with Our Specially Curated Activities. 
-            From thrilling safaris to serene nature walks, discover the best of Ceylon.
+            Handpicked experiences, trusted local guides, and real moments beyond the guidebooks.
+            No rush, no stress, just pure island stories waiting for you. Book easy, travel right and
+            impossible to forget. 
           </p>
+
+          <p className="new-dest-desc">Passion Driven True Ceylon Experience</p>
           <button className="view-all-btn" onClick={() => navigate('/activities')}>
             View All
           </button>
@@ -234,20 +311,34 @@ const Destinations = () => {
               key={activity.id || index}
               onClick={() => setActiveIndex(index)}
             >
-              <img src={activity.image} alt={activity.title} className="new-dest-card-img" />
-              <div className="new-dest-card-overlay">
-                <div className="new-dest-card-text">
-                  <h3>{activity.title}</h3>
-                  <span>{activity.category}</span>
-                </div>
-                {index === activeIndex && (
-                  <div className="new-dest-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" width="18" height="18">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+              <div className="new-dest-card-inner">
+                <img src={activity.image || undefined} alt={activity.title} className="new-dest-card-img" />
+                <div className="new-dest-card-overlay">
+                  <div className="new-dest-card-text">
+                    <h3>{activity.title}</h3>
+                    <span>{activity.category}</span>
                   </div>
-                )}
+                  {index === activeIndex && (
+                    <div className="new-dest-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" width="18" height="18">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
               </div>
+              {activity.discount && (
+                <div className="discount-badge">
+                  <svg viewBox="0 0 100 100" className="badge-bg">
+                    <polygon fill="var(--primary)" points="50,4 57.8,10.8 67.6,7.5 72.2,16.7 82.5,17.5 83.3,27.8 92.5,32.4 89.2,42.2 96,50 89.2,57.8 92.5,67.6 83.3,72.2 82.5,82.5 72.2,83.3 67.6,92.5 57.8,89.2 50,96 42.2,89.2 32.4,92.5 27.8,83.3 17.5,82.5 16.7,72.2 7.5,67.6 10.8,57.8 4,50 10.8,42.2 7.5,32.4 16.7,27.8 17.5,17.5 27.8,16.7 32.4,7.5 42.2,10.8" />
+                  </svg>
+                  <div className="badge-text">
+                    <span className="badge-small">Get Up to</span>
+                    <span className="badge-large">{activity.discount}% Off</span>
+                    <span className="badge-small">DISCOUNT</span>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

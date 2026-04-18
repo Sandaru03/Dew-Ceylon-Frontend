@@ -8,6 +8,7 @@ const AdminUpcomingTrips = () => {
   const [editingTrip, setEditingTrip] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [isSectionEnabled, setIsSectionEnabled] = useState(true);
 
   const [formData, setFormData] = useState({ title: '', price: '', image: '' });
 
@@ -17,6 +18,10 @@ const AdminUpcomingTrips = () => {
       const res = await fetch(API_BASE_URL + '/api/upcoming-trips');
       const data = await res.json();
       setTrips(data);
+      
+      const resToggle = await fetch(API_BASE_URL + '/api/upcoming-trips/toggle');
+      const toggleData = await resToggle.json();
+      setIsSectionEnabled(toggleData.enabled);
     } catch (err) {
       console.error(err);
     } finally {
@@ -92,6 +97,22 @@ const AdminUpcomingTrips = () => {
     setEditingTrip(null);
     setFormData({ title: '', price: '', image: '' });
     setIsFormOpen(true);
+  };
+
+  const handleToggleSection = async (val) => {
+    setIsSectionEnabled(val);
+    try {
+      await fetch(API_BASE_URL + '/api/upcoming-trips/toggle', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        },
+        body: JSON.stringify({ enabled: val })
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const formStyles = `
@@ -182,7 +203,24 @@ const AdminUpcomingTrips = () => {
 
   const listStyles = `
     .utrip-list { width: 100%; }
-    .utrip-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; }
+    .utrip-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; flex-wrap: wrap; gap: 1rem; }
+    .header-actions { display: flex; align-items: center; gap: 1.5rem; }
+    
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: rgba(255,255,255,0.05);
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+    }
+    .toggle-label { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+    .switch { position: relative; width: 44px; height: 24px; display: inline-block; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: rgba(255,255,255,0.2); transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--primary, #c6ff00); }
+    input:checked + .slider:before { transform: translateX(20px); background-color: black; }
     .utrip-list-title { font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; }
     .utrip-grid {
       display: grid;
@@ -334,7 +372,16 @@ const AdminUpcomingTrips = () => {
       <style>{listStyles}</style>
       <div className="utrip-list-header">
         <h1 className="utrip-list-title">Upcoming Trips</h1>
-        <button className="btn-primary-admin" onClick={openAddForm}>+ Add Trip</button>
+        <div className="header-actions">
+          <div className="toggle-container">
+            <span className="toggle-label">Show on Homepage</span>
+            <label className="switch">
+              <input type="checkbox" checked={isSectionEnabled} onChange={(e) => handleToggleSection(e.target.checked)} />
+              <span className="slider"></span>
+            </label>
+          </div>
+          <button className="btn-primary-admin" onClick={openAddForm}>+ Add Trip</button>
+        </div>
       </div>
 
       {loading ? (

@@ -207,7 +207,6 @@ svg {
 
   .ut-cards-track {
     animation: marquee-scroll 28s linear infinite !important;
-    transform: translate3d(0, 0, 0) !important;
   }
 
   .glass-card,

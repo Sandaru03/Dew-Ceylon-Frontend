@@ -8,6 +8,7 @@ const Navbar = () => {
   const [pillStyle, setPillStyle] = useState({ opacity: 0 });
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const listRef = useRef([]);
   const navigate = useNavigate();
@@ -44,6 +45,22 @@ const Navbar = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/packages?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    } else {
+      setIsSearchOpen(!isSearchOpen);
+    }
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   useEffect(() => {
     let ticking = false;
@@ -291,8 +308,11 @@ const Navbar = () => {
           top: 84px;
           left: 1rem;
           right: 1rem;
-          background: rgba(0, 0, 0, 0.95);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(10, 17, 24, 0.85);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
           border-radius: 18px;
           padding: 1rem;
           z-index: 999;
@@ -385,9 +405,12 @@ const Navbar = () => {
               type="text" 
               className="search-input" 
               placeholder="Search here..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
               onClick={(e) => e.stopPropagation()}
             />
-            <button className="search-btn" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+            <button className="search-btn" onClick={handleSearch}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>

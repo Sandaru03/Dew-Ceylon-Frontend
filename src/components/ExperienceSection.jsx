@@ -1,7 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import imgMain from '../assets/hero.jpg';
-import imgSub from '../assets/hero4.jpg';
 
 const ExperienceSection = () => {
   const navigate = useNavigate();
@@ -210,10 +208,10 @@ const ExperienceSection = () => {
         .exp-bullet-list {
           list-style: none;
           padding: 0;
-          margin: 0 0 1.5rem 0;
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
+          margin: 0;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem 1.5rem;
         }
 
         .exp-bullet-list li {
@@ -393,11 +391,11 @@ const ExperienceSection = () => {
           </div>
 
           <div className="exp-main-img">
-            <img src={imgMain} alt="Travel Couple" />
+            <img src="https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_auto,w_800/v1774240427/hero_1_hqhomo.jpg" alt="Water Fall Main" />
           </div>
 
           <div className="exp-sub-img">
-            <img src={imgSub} alt="Beach Relax" />
+            <img src="https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_auto,w_500/v1774240526/demodara-nine-arch-bridge-ella-sri-lanka.jpg_1_xm706n.jpg" alt="Nine Arch Bridge" />
           </div>
 
         </div>
@@ -405,78 +403,50 @@ const ExperienceSection = () => {
         {/* ── RIGHT: CONTENT ── */}
         <div className="exp-content">
           <div className="exp-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
-            GET TO KNOW US
+            Why Book with us
           </div>
 
           <h2 className="exp-heading">
-            Experience the World with Our Company
+            Why Book With Dew Ceylon?
           </h2>
 
           <p className="exp-desc">
-            There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form, by injected humour,
+            Experience true Ceylon with our specially curated journeys, blending luxury, authenticity, and unparalleled comfort for a once-in-a-lifetime adventure.
           </p>
 
-          <div className="exp-features-grid">
-            <div className="exp-feature">
-              <div className="exp-feat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                  <path d="m9 12 2 2 4-4"/>
-                </svg>
-              </div>
-              <div className="exp-feat-text">
-                <h4>Friendly Guide</h4>
-                <p>There are many variations of passages of lorem ipsum.</p>
-              </div>
-            </div>
-
-            <div className="exp-feature">
-              <div className="exp-feat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 7h-3V4c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM9 4h6v3H9V4z"/>
-                  <path d="M12 12v6"/>
-                  <path d="M9 15h6"/>
-                </svg>
-              </div>
-              <div className="exp-feat-text">
-                <h4>Safety Travel</h4>
-                <p>There are many variations of passages of lorem ipsum.</p>
-              </div>
-            </div>
-          </div>
-
           <div className="exp-bottom-row">
-            <div className="exp-award-box">
-              <div className="exp-award-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 5h-2V3a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v2H5a2 2 0 0 0-2 2v1a5 5 0 0 0 4.09 4.9A5 5 0 0 0 11 12h2a5 5 0 0 0 3.91-1.1A5 5 0 0 0 21 8V7a2 2 0 0 0-2-2zM5 8V7h2v2a3 3 0 0 1-2-1zm14 0a3 3 0 0 1-2 1V7h2v1zM11 14h2a3 3 0 0 0 2-1v-1h-6v1a3 3 0 0 0 2 1z"/>
-                  <path d="M14 15h-4v4h-2v2h8v-2h-2v-4z"/>
-                </svg>
-              </div>
-              <span>Award Winning<br/>Agency</span>
-            </div>
-
             <div className="exp-bullets">
               <ul className="exp-bullet-list">
                 <li>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  Many variations of passages of lorem.
+                  No-Regrets Itineraries
                 </li>
                 <li>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  Many variations of passages of lorem.
+                  Stories You Can’t Google
                 </li>
                 <li>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  Expert many variations teacher.
+                  Zero Hidden Fees
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Travel Your Way, VIP Always
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  24/7 On-Ground Support
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Memories for Every Generation
                 </li>
               </ul>
-              <button className="exp-cta-btn" onClick={() => navigate('/about')}>
-                Explore More
-              </button>
             </div>
           </div>
 

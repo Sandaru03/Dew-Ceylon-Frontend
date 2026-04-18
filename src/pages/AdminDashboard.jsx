@@ -8,7 +8,9 @@ import AdminTaxi from './AdminTaxi';
 import AdminFleet from './AdminFleet';
 import AdminUpcomingTrips from './AdminUpcomingTrips';
 import AdminFeaturedPackages from './AdminFeaturedPackages';
+import AdminFeaturedActivities from './AdminFeaturedActivities';
 import AdminCategories from './AdminCategories';
+import AdminReviews from './AdminReviews';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -315,9 +317,17 @@ const AdminDashboard = () => {
              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"></path><circle cx="12" cy="11" r="3"></circle></svg>
              Upcoming Trips
           </Link>
-          <Link to="/admin/dashboard/featured" className={`sidebar-link ${isActive('featured') ? 'active' : ''}`}>
+          <Link to="/admin/dashboard/featured" className={`sidebar-link ${location.pathname === '/admin/dashboard/featured' ? 'active' : ''}`}>
              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
              Featured Packages
+          </Link>
+          <Link to="/admin/dashboard/featured-activities" className={`sidebar-link ${location.pathname === '/admin/dashboard/featured-activities' ? 'active' : ''}`}>
+             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+             Featured Activities
+          </Link>
+          <Link to="/admin/dashboard/reviews" className={`sidebar-link ${isActive('reviews') ? 'active' : ''}`}>
+             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+             Reviews
           </Link>
         </nav>
 
@@ -350,6 +360,8 @@ const AdminDashboard = () => {
           <Route path="/categories" element={<AdminCategories />} />
           <Route path="/upcoming-trips" element={<AdminUpcomingTrips />} />
           <Route path="/featured" element={<AdminFeaturedPackages />} />
+          <Route path="/featured-activities" element={<AdminFeaturedActivities />} />
+          <Route path="/reviews" element={<AdminReviews />} />
         </Routes>
       </main>
     </div>

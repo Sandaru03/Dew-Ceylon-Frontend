@@ -13,7 +13,7 @@ const PopularPackages = () => {
       try {
         const res = await fetch(API_BASE_URL + '/api/featured-packages');
         const data = await res.json();
-        setPackages(data);
+        setPackages(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Failed to fetch featured packages:', err);
       } finally {
@@ -68,11 +68,17 @@ const PopularPackages = () => {
           position: relative;
           aspect-ratio: 4 / 5;
           border-radius: 30px;
-          overflow: hidden;
           box-shadow: 0 20px 40px rgba(0,0,0,0.15);
           transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           cursor: pointer;
           will-change: transform;
+        }
+        
+        .pkg-card-inner {
+          position: absolute;
+          inset: 0;
+          border-radius: 30px;
+          overflow: hidden;
         }
         
         .pkg-card:hover {
@@ -164,6 +170,74 @@ const PopularPackages = () => {
           padding: 6rem;
           color: #aaa;
         }
+
+        .discount-badge {
+          position: absolute;
+          top: -40px;
+          right: -25px;
+          width: 100px;
+          height: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: badge-spin 10s linear infinite;
+          z-index: 10;
+        }
+
+        @-webkit-keyframes badge-spin {
+          from { -webkit-transform: rotate(0deg); }
+          to   { -webkit-transform: rotate(360deg); }
+        }
+        
+        @keyframes badge-spin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        
+        .badge-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+        }
+        
+        .badge-text {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: #121E2A;
+          font-weight: 900;
+          text-align: center;
+          -webkit-animation: badge-counter-spin 10s linear infinite;
+          animation: badge-counter-spin 10s linear infinite;
+        }
+        
+        @-webkit-keyframes badge-counter-spin {
+          from { -webkit-transform: rotate(0deg);   }
+          to   { -webkit-transform: rotate(-360deg); }
+        }
+        
+        @keyframes badge-counter-spin {
+          from { transform: rotate(0deg);   }
+          to   { transform: rotate(-360deg); }
+        }
+        
+        .badge-small {
+          font-size: 0.55rem;
+          font-weight: 800;
+          line-height: 1.2;
+          letter-spacing: 0px;
+        }
+        
+        .badge-large {
+          font-size: 1.2rem;
+          line-height: 1;
+          margin: 0.1rem 0;
+          letter-spacing: -0.5px;
+        }
         
         @media (max-width: 1024px) {
           .popular-container { grid-template-columns: 1fr; }
@@ -203,13 +277,27 @@ const PopularPackages = () => {
 const PackageCard = ({ data, onView }) => {
   return (
     <div className="pkg-card" onClick={onView}>
-      <img src={data.image} alt={data.title} className="pkg-img" />
-      <div className="pkg-overlay">
-        <span className="pkg-badge">{data.duration || data.category}</span>
-        <h3 className="pkg-title">{data.title}</h3>
-        <p className="pkg-desc">{data.short_description || data.description}</p>
-        <button className="pkg-view-btn" onClick={(e) => { e.stopPropagation(); onView(); }}>View Details</button>
+      <div className="pkg-card-inner">
+        <img src={data.image || undefined} alt={data.title} className="pkg-img" />
+        <div className="pkg-overlay">
+          <span className="pkg-badge">{data.duration || data.category}</span>
+          <h3 className="pkg-title">{data.title}</h3>
+          <p className="pkg-desc">{data.short_description || data.description}</p>
+          <button className="pkg-view-btn" onClick={(e) => { e.stopPropagation(); onView(); }}>View Details</button>
+        </div>
       </div>
+      {data.discount && (
+        <div className="discount-badge">
+          <svg viewBox="0 0 100 100" className="badge-bg">
+            <polygon fill="var(--primary)" points="50,4 57.8,10.8 67.6,7.5 72.2,16.7 82.5,17.5 83.3,27.8 92.5,32.4 89.2,42.2 96,50 89.2,57.8 92.5,67.6 83.3,72.2 82.5,82.5 72.2,83.3 67.6,92.5 57.8,89.2 50,96 42.2,89.2 32.4,92.5 27.8,83.3 17.5,82.5 16.7,72.2 7.5,67.6 10.8,57.8 4,50 10.8,42.2 7.5,32.4 16.7,27.8 17.5,17.5 27.8,16.7 32.4,7.5 42.2,10.8" />
+          </svg>
+          <div className="badge-text">
+            <span className="badge-small">Get Up to</span>
+            <span className="badge-large">{data.discount}% Off</span>
+            <span className="badge-small">DISCOUNT</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

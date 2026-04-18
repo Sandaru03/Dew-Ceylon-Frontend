@@ -301,7 +301,7 @@ const ContactUs = () => {
               </div>
               <div className="info-content">
                 <h3>Phone</h3>
-                <p>+94 77 123 4567</p>
+                <p>+94 777650293</p>
               </div>
             </div>
 
@@ -314,7 +314,7 @@ const ContactUs = () => {
               </div>
               <div className="info-content">
                 <h3>Email</h3>
-                <p>hello@dewceylon.com</p>
+                <p> dewceylontours@gmail.com</p>
               </div>
             </div>
 
@@ -327,7 +327,11 @@ const ContactUs = () => {
               </div>
               <div className="info-content">
                 <h3>Office</h3>
-                <p>123 Palm Avenue, Colombo, Sri Lanka</p>
+                <a href="https://maps.app.goo.gl/MsicUWYCVF6LbYAm9" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                  <p style={{ cursor: 'pointer', transition: 'color 0.3s ease' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)'}>
+                    30 Shramadana Mawatha, Eththukala, Negombo
+                  </p>
+                </a>
               </div>
             </div>
           </div>
@@ -395,7 +399,49 @@ const ContactUs = () => {
           </form>
         </div>
 
+        {/* Map Section */}
+        <div className="map-section animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+          <div className="map-card">
+            <iframe 
+              title="Dew Ceylon Location"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.0457786461425!2d79.84237876092857!3d7.235618762765454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2eeb37feb3081%3A0x17a4a2e3b9f3c68d!2s30%20Shramadana%20Mawatha%2C%20Negombo%2011500!5e0!3m2!1sen!2slk!4v1776490240606!5m2!1sen!2slk"
+              width="100%" 
+              height="450" 
+              style={{ border: 0, borderRadius: '20px' }} 
+              allowFullScreen="" 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+
       </div>
+      <style>{`
+        .map-section {
+          grid-column: 1 / -1;
+          margin-top: 5rem;
+          width: 100%;
+        }
+
+        .map-card {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 24px;
+          padding: 1rem;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+          overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+          .map-section {
+            margin-top: 3rem;
+          }
+          .map-card iframe {
+            height: 350px;
+          }
+        }
+      `}</style>
     </div>
   );
 };

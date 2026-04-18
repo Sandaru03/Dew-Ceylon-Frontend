@@ -1,9 +1,8 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-
-const AdminFeaturedPackages = () => {
-  const [allPackages, setAllPackages] = useState([]);
+const AdminFeaturedActivities = () => {
+  const [allActivities, setAllActivities] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -13,17 +12,24 @@ const AdminFeaturedPackages = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('adminToken');
-        const [pkgRes, featuredRes] = await Promise.all([
-          fetch(API_BASE_URL + '/api/packages?includeHidden=true'),
-          fetch(API_BASE_URL + '/api/featured-packages/ids', {
+        const [actRes, featuredRes] = await Promise.all([
+          fetch(API_BASE_URL + '/api/activities'),
+          fetch(API_BASE_URL + '/api/featured-activities/ids', {
             headers: { 'Authorization': `Bearer ${token}` }
           })
         ]);
-        const packages = await pkgRes.json();
-        const featuredItems = await featuredRes.json();
-        setAllPackages([...packages].sort((a, b) => b.id - a.id));
-        const parsedFeatured = Array.isArray(featuredItems)
-          ? featuredItems.map(item => ({...item, id: Number(item.id)}))
+        const activities = await actRes.json();
+        const featuredIds = await featuredRes.json();
+        
+        // Ensure activities is an array, though it might error if API fails
+        if (Array.isArray(activities)) {
+          setAllActivities([...activities].sort((a, b) => b.id - a.id));
+        } else {
+          setAllActivities([]);
+        }
+        
+        const parsedFeatured = Array.isArray(featuredIds) 
+          ? featuredIds.map(item => ({...item, id: Number(item.id)})) 
           : [];
         setSelectedItems(parsedFeatured);
       } catch (err) {
@@ -35,14 +41,13 @@ const AdminFeaturedPackages = () => {
     fetchData();
   }, []);
 
-  const togglePackage = (id) => {
+  const toggleActivity = (id) => {
     setSelectedItems(prev => {
       const exists = prev.find(item => item.id === id);
       if (exists) {
         return prev.filter(item => item.id !== id);
       }
       if (prev.length >= 4) {
-        // Replace the last one
         return [...prev.slice(0, 3), { id, discount: null }];
       }
       return [...prev, { id, discount: null }];
@@ -76,7 +81,7 @@ const AdminFeaturedPackages = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch(API_BASE_URL + '/api/featured-packages', {
+      const res = await fetch(API_BASE_URL + '/api/featured-activities', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +100,7 @@ const AdminFeaturedPackages = () => {
     }
   };
 
-  const getPackageById = (id) => allPackages.find(p => p.id === id);
+  const getActivityById = (id) => allActivities.find(a => a.id === id);
 
   return (
     <div className="fp-page animate-fade-in">
@@ -119,7 +124,7 @@ const AdminFeaturedPackages = () => {
           align-items: start;
         }
 
-        /* All Packages Grid */
+        /* All Activities Grid */
         .fp-all-title {
           font-size: 0.72rem;
           font-weight: 800;
@@ -316,44 +321,44 @@ const AdminFeaturedPackages = () => {
 
       <div className="fp-header">
         <div>
-          <h1 className="fp-title">Featured Packages</h1>
-          <p className="fp-subtitle">Select exactly 4 packages to feature in the "Popular Packages" section on the homepage.</p>
+          <h1 className="fp-title">Featured Activities</h1>
+          <p className="fp-subtitle">Select up to 4 activities to feature in the "Popular Activities" section on the homepage.</p>
         </div>
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '6rem', opacity: 0.4 }}>Loading packages...</div>
+        <div style={{ textAlign: 'center', padding: '6rem', opacity: 0.4 }}>Loading activities...</div>
       ) : (
         <div className="fp-layout">
-          {/* Left: All packages grid */}
+          {/* Left: All activities grid */}
           <div>
-            <p className="fp-all-title">All Packages - click to select/deselect</p>
-            {allPackages.length === 0 ? (
+            <p className="fp-all-title">All Activities - click to select/deselect</p>
+            {allActivities.length === 0 ? (
               <div className="fp-pkg-grid">
                 <div className="fp-no-packages">
                   <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>No Items</p>
-                  <p>No packages found. Add packages in the Journeys section first.</p>
+                  <p>No activities found. Add activities in the Manage section first.</p>
                 </div>
               </div>
             ) : (
               <div className="fp-pkg-grid">
-                {allPackages.map((pkg) => {
-                  const isSelected = selectedItems.some(i => i.id === pkg.id);
-                  const slotIndex = selectedItems.findIndex(i => i.id === pkg.id);
+                {allActivities.map((act) => {
+                  const isSelected = selectedItems.some(i => i.id === act.id);
+                  const slotIndex = selectedItems.findIndex(i => i.id === act.id);
                   return (
                     <div
-                      key={pkg.id}
+                      key={act.id}
                       className={`fp-pkg-tile ${isSelected ? 'selected' : ''}`}
-                      onClick={() => togglePackage(pkg.id)}
+                      onClick={() => toggleActivity(act.id)}
                     >
-                      {pkg.image ? (
-                        <img src={pkg.image} alt={pkg.title} className="fp-pkg-tile-img" />
+                      {act.image ? (
+                        <img src={act.image} alt={act.title} className="fp-pkg-tile-img" />
                       ) : (
                         <div style={{ width: '100%', height: '100%', background: '#1a1a1a' }} />
                       )}
                       <div className="fp-pkg-tile-overlay">
-                        <p className="fp-pkg-tile-name">{pkg.title}</p>
-                        <p className="fp-pkg-tile-dur">{pkg.duration} | {pkg.category}</p>
+                        <p className="fp-pkg-tile-name">{act.title}</p>
+                        <p className="fp-pkg-tile-dur">{act.category}</p>
                       </div>
                       {isSelected ? (
                         <div className="fp-checkmark">#{slotIndex + 1}</div>
@@ -373,14 +378,14 @@ const AdminFeaturedPackages = () => {
           <div className="fp-selected-panel">
             <p className="fp-panel-title">Selected for Homepage</p>
             <div className="fp-counter">
-              <span>{selectedItems.length}</span> / 4 packages selected
+              <span>{selectedItems.length}</span> / 4 activities selected
             </div>
             <div className="fp-slots">
               {[0, 1, 2, 3].map((slotIdx) => {
                 const item = selectedItems[slotIdx];
-                const pkgId = item ? item.id : null;
-                const pkg = pkgId ? getPackageById(pkgId) : null;
-                if (!pkg) {
+                const actId = item ? item.id : null;
+                const act = actId ? getActivityById(actId) : null;
+                if (!act) {
                   return (
                     <div key={slotIdx} className="fp-slot empty">
                       <span style={{ fontSize: '0.82rem', fontWeight: 700 }}>Slot {slotIdx + 1} - empty</span>
@@ -390,10 +395,10 @@ const AdminFeaturedPackages = () => {
                 return (
                   <div key={slotIdx} className="fp-slot">
                     <div className="fp-slot-num">{slotIdx + 1}</div>
-                    {pkg.image && <img src={pkg.image} alt={pkg.title} className="fp-slot-img" />}
+                    {act.image && <img src={act.image} alt={act.title} className="fp-slot-img" />}
                     <div className="fp-slot-info">
-                      <div className="fp-slot-name">{pkg.title}</div>
-                      <div className="fp-slot-cat">{pkg.category} | {pkg.duration}</div>
+                      <div className="fp-slot-name">{act.title}</div>
+                      <div className="fp-slot-cat">{act.category}</div>
                     </div>
                     <div className="fp-slot-disc" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                       <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', marginBottom: '4px' }}>Discount</span>
@@ -421,7 +426,7 @@ const AdminFeaturedPackages = () => {
                     </div>
                     <button
                       className="fp-remove-btn"
-                      onClick={() => setSelectedItems(prev => prev.filter(i => i.id !== pkgId))}
+                      onClick={() => setSelectedItems(prev => prev.filter(i => i.id !== actId))}
                       title="Remove"
                     >x</button>
                   </div>
@@ -442,7 +447,4 @@ const AdminFeaturedPackages = () => {
   );
 };
 
-export default AdminFeaturedPackages;
-
-
-
+export default AdminFeaturedActivities;

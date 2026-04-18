@@ -4,16 +4,23 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const UpcomingTrips = () => {
   const [trips, setTrips] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isEnabled, setIsEnabled] = useState(true);
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const res = await fetch(API_BASE_URL + '/api/upcoming-trips');
-        const data = await res.json();
-        setTrips(data);
+        const resToggle = await fetch(API_BASE_URL + '/api/upcoming-trips/toggle');
+        const toggleData = await resToggle.json();
+        setIsEnabled(toggleData.enabled);
+
+        if (toggleData.enabled) {
+          const res = await fetch(API_BASE_URL + '/api/upcoming-trips');
+          const data = await res.json();
+          setTrips(Array.isArray(data) ? data : []);
+        }
       } catch (err) {
-        console.error('Failed to fetch upcoming trips:', err);
+        console.error('Failed to fetch upcoming trips data:', err);
       } finally {
         setLoading(false);
       }
@@ -21,7 +28,12 @@ const UpcomingTrips = () => {
     fetchTrips();
   }, []);
 
-  if (!loading && trips.length === 0) return null;
+  if (!loading && (!isEnabled || trips.length === 0)) return null;
+
+  // Keep an even number of repeated sets so first half and second half are identical for seamless marquee.
+  const marqueeTrips = trips.length > 0
+    ? [...trips, ...trips, ...trips, ...trips, ...trips, ...trips]
+    : [];
 
   return (
     <section className="ut-premium-bg">
@@ -352,34 +364,13 @@ const UpcomingTrips = () => {
           <div className="ut-loading">Loading Trips...</div>
         ) : (
           <div className="ut-slider-wrapper">
-            <div 
-              className="ut-cards-track"
-            >
-              {/* Original cards */}
-              {trips.map((trip, index) => (
+            <div className="ut-cards-track">
+              {marqueeTrips.map((trip, index) => (
                 <div 
                   className="ut-card" 
-                  key={`orig-${trip.id}`} 
+                  key={`ut-${trip.id}-${index}`} 
                 >
-                  <img src={trip.image} alt={trip.title} className="ut-card-img" />
-                  <div className="ut-card-content">
-                    <h3 className="ut-card-title">{trip.title}</h3>
-                    {trip.price && (
-                      <div className="ut-price-box">
-                        <span className="ut-price-label">Starts at</span>
-                        <span className="ut-price-val">{trip.price.startsWith('$') ? trip.price : `$${trip.price}`}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-              {/* Duplicate cards for seamless infinite loop */}
-              {trips.map((trip, index) => (
-                <div 
-                  className="ut-card" 
-                  key={`dup-${trip.id}`} 
-                >
-                  <img src={trip.image} alt={trip.title} className="ut-card-img" />
+                  <img src={trip.image || undefined} alt={trip.title} className="ut-card-img" />
                   <div className="ut-card-content">
                     <h3 className="ut-card-title">{trip.title}</h3>
                     {trip.price && (

@@ -1101,9 +1101,9 @@ const Taxi = () => {
         <div className="taxi-hero-bg" />
         <div className="hero-noise-overlay" />
         <div className="taxi-hero-content animate-fade-in-up">
-          <h1>Travel in <span>Pure Comfort</span></h1>
+          <h1>Beyond a Taxi <span>Into Sri Lanka</span></h1>
           <p className="taxi-hero-sub">
-            Sri Lanka's most trusted taxi &amp; transfer service  premium vehicles, professional drivers, transparent pricing.
+            Smooth, honest journeys designed around you, so you can relax, explore freely, and enjoy every moment without worry.
           </p>
           <div className="hero-stats">
             <div className="hero-stat">
@@ -1132,10 +1132,10 @@ const Taxi = () => {
       <div className="why-us-strip">
         <div className="why-us-inner">
           {[
-            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, title: 'Fully Insured', desc: 'Every ride is fully covered for your peace of mind.' },
-            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: 'Always On Time', desc: 'We track flights and plan ahead so you never wait.' },
-            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Fixed Prices', desc: 'Transparent fares with zero hidden charges â€” ever.' },
-            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, title: 'Expert Drivers', desc: 'Professional, English-speaking, trained guides.' },
+            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>, title: 'Local Secrets', desc: 'Stop anytime, And discover places you didn’t plan.' },
+            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>, title: 'Easy Communication', desc: 'Friendly, English-speaking drivers, No language stress.' },
+            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Fixed Prices', desc: 'No extra. No surprises.Simple, honest, and worry-free.' },
+            { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, title: 'Expert Drivers', desc: 'Well-rested, professional drivers focused on your comfort and safety.' },
           ].map((item, i) => (
             <div className="why-item" key={i}>
               <div className="why-icon-wrap">{item.icon}</div>

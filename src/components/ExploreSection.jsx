@@ -1,9 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import img1 from '../assets/hero.jpg';
-import img2 from '../assets/hero2.jpg';
-import img3 from '../assets/hero4.jpg';
-import blobBg from '../assets/hero3.jpg';
 
 const ExploreSection = () => {
   const sectionRef = useRef(null);
@@ -66,70 +62,38 @@ const ExploreSection = () => {
         }
         
         .explore-title {
-          font-size: 5rem;
-          line-height: 0.95;
+          font-size: 3.5rem;
+          line-height: 1.1;
           color: #121E2A;
           font-weight: 900;
           margin-bottom: 2rem;
           font-family: 'Montserrat', sans-serif;
         }
-        
-        .discount-badge {
-          position: absolute;
-          top: 10px;
-          right: -30px;
-          width: 220px;
-          height: 220px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          animation: badge-spin 10s linear infinite;
+
+        .explore-tagline {
+          font-size: 1.2rem;
+          color: var(--primary);
+          font-weight: 800;
+          text-transform: uppercase;
+          margin-bottom: 1.5rem;
+          letter-spacing: 1px;
         }
-        
-        @keyframes badge-spin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-        
-        .badge-bg {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: -1;
-        }
-        
-        .badge-text {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
+
+        .explore-desc-header {
+          font-size: 1.4rem;
+          font-weight: 800;
           color: #121E2A;
-          font-weight: 900;
-          text-align: center;
-          /* counter-rotate so text stays readable while star spins */
-          animation: badge-counter-spin 10s linear infinite;
+          margin-bottom: 1rem;
+          line-height: 1.3;
         }
-        
-        @keyframes badge-counter-spin {
-          from { transform: rotate(0deg);   }
-          to   { transform: rotate(-360deg); }
-        }
-        
-        .badge-small {
+
+        .explore-description {
+          color: #666;
           font-size: 1rem;
-          font-weight: 700;
-          line-height: 1.2;
-          letter-spacing: 0.5px;
+          line-height: 1.7;
+          margin-bottom: 2.5rem;
         }
-        
-        .badge-large {
-          font-size: 2.2rem;
-          line-height: 1;
-          margin: 0.2rem 0;
-          letter-spacing: -1px;
-        }
+
         
         .packages-subtitle {
           color: #AAAAAA;
@@ -153,14 +117,16 @@ const ExploreSection = () => {
         
         .packages-list li {
           display: flex;
-          align-items: center;
+          align-items: flex-start; /* Aligns icon with first line of text */
           gap: 0.8rem;
+          line-height: 1.4;
         }
         
         .packages-list li svg {
-          width: 24px;
-          height: 24px;
+          width: 22px;
+          height: 22px;
           flex-shrink: 0;
+          margin-top: 2px; /* Fine-tune icon vertical position */
         }
         
         .explore-actions {
@@ -237,7 +203,7 @@ const ExploreSection = () => {
           transform: translateY(-50%);
           width: 80%;
           height: 120%;
-          background-image: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.1)), url(${blobBg});
+          background-image: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.1)), url('https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_auto,w_800/v1772084176/tharoushan-kandarajah-KtDXt7DyfVM-unsplash_yhkhrb.jpg');
           background-size: cover;
           background-position: center;
           border-radius: 40px;
@@ -320,19 +286,23 @@ const ExploreSection = () => {
         }
         
         @media (max-width: 1024px) {
+          .explore-section { padding: 4rem 2rem; }
           .explore-container { flex-direction: column; }
-          .discount-badge {
-            position: relative;
-            margin-left: auto;
-            top: 0;
-            margin-top: -60px;
-            margin-bottom: 20px;
+          .explore-title { 
+            font-size: 2.5rem;
+            line-height: 1.1;
+            /* Removed max-width to prevent accidental word wrapping */
           }
-          .explore-title { font-size: 3.5rem; }
+          .packages-list { 
+            grid-template-columns: 1fr !important; 
+            gap: 1.2rem;
+          }
+          .packages-list li {
+            font-size: 1.1rem;
+          }
         }
         
         @media (max-width: 768px) {
-          .packages-list { grid-template-columns: 1fr; }
           .explore-actions { flex-direction: column; align-items: flex-start; }
           .explore-images { min-height: 500px; width: 100%; }
           .polaroid-1 { width: 280px; height: 180px; }
@@ -345,77 +315,38 @@ const ExploreSection = () => {
         {/* Left Content Column */}
         <div className="explore-content animate-fade-in-up">
           <div className="explore-subtitle">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
             </svg>
-            TIME TO TRAVEL
+            Unrushed passion, true Ceylon
           </div>
-          <h2 className="explore-title">EXPLORE<br/>WITH US</h2>
+          <h3 className="explore-title">Don't Just Visit<br/> Sri Lanka.</h3>
           
-          <div className="discount-badge">
-            {/* Scalloped / wavy star SVG — spins with the badge */}
-            <svg viewBox="0 0 100 100" className="badge-bg">
-              <polygon
-                fill="var(--primary)"
-                points="
-                  50,4    57.8,10.8  67.6,7.5   72.2,16.7
-                  82.5,17.5 83.3,27.8 92.5,32.4  89.2,42.2
-                  96,50   89.2,57.8  92.5,67.6  83.3,72.2
-                  82.5,82.5 72.2,83.3 67.6,92.5  57.8,89.2
-                  50,96   42.2,89.2  32.4,92.5  27.8,83.3
-                  17.5,82.5 16.7,72.2 7.5,67.6   10.8,57.8
-                  4,50    10.8,42.2  7.5,32.4   16.7,27.8
-                  17.5,17.5 27.8,16.7 32.4,7.5   42.2,10.8
-                "
-              />
-            </svg>
-            {/* Text counter-rotates to stay upright */}
-            <div className="badge-text">
-              <span className="badge-small">Get Up to</span>
-              <span className="badge-large">50% Off</span>
-              <span className="badge-small">DISCOUNT</span>
-            </div>
-          </div>
+          <p className="explore-tagline">Not Just a Tour… It’s Your Sri Lanka Story</p>
 
-          <h4 className="packages-subtitle">ALL PACKAGES INCLUDE</h4>
+
+          <h4 className="explore-desc-header">Feel It</h4>
           
-          <ul className="packages-list">
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Travel Insurance
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Hotel Booking
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Return Flight
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Air Tickets
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Accommodation
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Visa Services
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Vehicle Rentals
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Vehicle Rentals
-            </li>
-          </ul>
+          <p className="explore-description">
+            Skip the endless research, tourist traps, and travel anxiety. With Dew Ceylon Tours, you get 100% private journeys crafted by trusted local experts. We handle every single detail you simply show up and make the memories.
+            <br/><br/>
+            <strong>Your dream trip, zero stress</strong>
+          </p>
+          
 
-          <div className="explore-actions">
-            <button className="book-now-solid" onClick={() => navigate('/contact')}>Book Now</button>
+
+          <div className="explore-actions" style={{ gap: '1rem', flexWrap: 'wrap' }}>
+            <button className="book-now-solid" onClick={() => navigate('/packages')}>Popular Tours</button>
+            <button 
+              className="book-now-solid" 
+              style={{ background: 'transparent', border: '2px solid #121E2A', color: '#121E2A' }}
+              onMouseOver={(e) => { e.target.style.background = '#121E2A'; e.target.style.color = '#fff'; }}
+              onMouseOut={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#121E2A'; }}
+              onClick={() => navigate('/plan-my-trip')}
+            >
+              Plan My Trip
+            </button>
             <div className="explore-contact">
               <div className="phone-icon">
                 <svg viewBox="0 0 24 24" fill="var(--primary)" width="24" height="24">
@@ -434,13 +365,13 @@ const ExploreSection = () => {
         <div className="explore-images">
           <div className="images-bg-blob"></div>
           <div className="polaroid polaroid-1">
-            <img src={img3} alt="Mountain" />
+            <img src="https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_auto,w_600/v1772526396/theres-no-taming-rapids-only-going-with-flow-shot-group-young-male-friends-white-water-rafting_rd0fxv.jpg" alt="Water Rafting" />
           </div>
           <div className="polaroid polaroid-3">
-            <img src={img1} alt="Jeep Safari" />
+            <img src="https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_auto,w_600/v1772524211/elephants-bathing-river-pinnawala-elephant-orphanage-sri-lanka_1_kd8kad.jpg" alt="Elephants Bathing" />
           </div>
           <div className="polaroid polaroid-2">
-            <img src={img2} alt="Snow Leopard" />
+            <img src="https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_auto,w_600/v1772526131/high-angle-view-woman-mountain-against-sky_xln5zm.jpg" alt="Woman Mountain" />
           </div>
         </div>
 

@@ -5,8 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 import Footer from '../components/Footer';
 
-// Reusing same headers
-import heroBg from '../assets/hero.jpg';
+// Optimized Cloudinary image url used directly below
 
 const Blog = () => {
   const navigate = useNavigate();
@@ -85,7 +84,10 @@ const Blog = () => {
           align-items: center;
           justify-content: center;
           text-align: center;
-          background: url(${heroBg}) center/cover fixed;
+          background-image: url("https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_30,w_1400/v1772526598/mihintale-anuradhapura-sri-lanka-dusk_zz7rbm.jpg");
+          background-position: center;
+          background-size: cover;
+          background-attachment: fixed;
         }
 
         .blog-hero::before {
@@ -405,6 +407,14 @@ const Blog = () => {
             white-space: normal;
             margin-bottom: 0.9rem;
           }
+          .blog-grid {
+            grid-template-columns: 1fr;
+            justify-items: center;
+          }
+          .blog-card {
+            width: 100%;
+            max-width: 420px;
+          }
         }
       `}</style>
 
@@ -469,7 +479,7 @@ const Blog = () => {
               {filteredBlogs.map((blog, index) => (
                 <div className="blog-card animate-fade-in-up" key={blog.id} style={{animationDelay: `${index * 0.1}s`}}>
                   <div className="blog-card-img-wrap">
-                    <img src={blog.image} alt={blog.title} className="blog-card-img" />
+                    <img src={blog.image || undefined} alt={blog.title} className="blog-card-img" />
                     <div className="blog-date">
                        {new Date(blog.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </div>

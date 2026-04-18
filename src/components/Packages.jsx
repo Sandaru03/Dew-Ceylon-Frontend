@@ -166,7 +166,7 @@ const Packages = () => {
         {packageData.map((pkg) => (
           <div className="pkg-card" key={pkg.id}>
             <div className="pkg-image-container">
-              <img src={pkg.image} alt={pkg.title} className="pkg-image" />
+              <img src={pkg.image || undefined} alt={pkg.title} className="pkg-image" />
             </div>
             
             <div className="pkg-content-glass">

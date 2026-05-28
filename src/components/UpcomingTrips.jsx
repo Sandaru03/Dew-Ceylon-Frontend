@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
@@ -6,6 +6,8 @@ const UpcomingTrips = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEnabled, setIsEnabled] = useState(true);
+
+  const trackRef = useRef(null);
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -28,12 +30,33 @@ const UpcomingTrips = () => {
     fetchTrips();
   }, []);
 
-  if (!loading && (!isEnabled || trips.length === 0)) return null;
-
   // Keep an even number of repeated sets so first half and second half are identical for seamless marquee.
+  // We only repeat enough to cover wide screens to prevent iOS lag from too many DOM elements.
+  const rawCount = trips.length || 1;
+  let repCount = Math.ceil(8 / rawCount);
+  if (repCount % 2 !== 0) repCount += 1; // force even
+  if (repCount < 2) repCount = 2;
+
   const marqueeTrips = trips.length > 0
-    ? [...trips, ...trips, ...trips, ...trips, ...trips, ...trips]
+    ? Array(repCount).fill(trips).flat()
     : [];
+
+  // JS pixel measurement to fix iOS/WebKit -50% translate bug inside overflow:hidden
+  useEffect(() => {
+    if (!trackRef.current || marqueeTrips.length === 0) return;
+    const measure = () => {
+      const halfWidth = trackRef.current.scrollWidth / 2;
+      if (halfWidth > 0) {
+        // Set exact pixel distance BEFORE starting animation
+        trackRef.current.style.setProperty('--scroll-distance', `-${halfWidth}px`);
+        trackRef.current.style.animationPlayState = 'running';
+      }
+    };
+    const t = setTimeout(measure, 100);
+    return () => clearTimeout(t);
+  }, [marqueeTrips.length]);
+
+  if (!loading && (!isEnabled || trips.length === 0)) return null;
 
   return (
     <section className="ut-premium-bg">
@@ -190,8 +213,10 @@ const UpcomingTrips = () => {
           display: flex;
           gap: 2rem;
           width: max-content;
-          animation: marquee-scroll 30s linear infinite;
+          animation: marquee-scroll 45s linear infinite;
+          animation-play-state: paused;
           will-change: transform;
+          -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
         }
 
@@ -206,7 +231,7 @@ const UpcomingTrips = () => {
             transform: translate3d(0, 0, 0);
           }
           100% {
-            transform: translate3d(-50%, 0, 0);
+            transform: translate3d(var(--scroll-distance), 0, 0);
           }
         }
         
@@ -222,6 +247,10 @@ const UpcomingTrips = () => {
           border: 1px solid rgba(255,255,255,0.05);
           background: #111;
           will-change: transform;
+          /* Fix invisible cards on iOS Safari */
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          isolation: isolate;
         }
         
         .ut-card:hover {
@@ -339,7 +368,7 @@ const UpcomingTrips = () => {
           .ut-premium-bg { padding: 5rem 2rem; }
           .ut-title { font-size: 2.8rem; }
           .ut-card { flex: 0 0 280px; height: 380px; }
-          .ut-cards-track { animation-duration: 24s; }
+          .ut-cards-track { animation-duration: 30s; }
         }
       `}</style>
       
@@ -364,7 +393,7 @@ const UpcomingTrips = () => {
           <div className="ut-loading">Loading Trips...</div>
         ) : (
           <div className="ut-slider-wrapper">
-            <div className="ut-cards-track">
+            <div className="ut-cards-track" ref={trackRef}>
               {marqueeTrips.map((trip, index) => (
                 <div 
                   className="ut-card" 

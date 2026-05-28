@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -199,6 +199,7 @@ const Destinations = () => {
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-shrink: 0;
         }
 
         .discount-badge {
@@ -277,6 +278,10 @@ const Destinations = () => {
             padding-right: 0;
             padding-bottom: 2rem;
             text-align: center;
+            width: 100%;
+          }
+          .new-dest-grid {
+            width: 100%;
           }
           .new-dest-title { font-size: 3rem; }
         }

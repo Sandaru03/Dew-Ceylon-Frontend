@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -102,18 +102,19 @@ const Activities = () => {
         }
 
         .pkg-hero-title {
-          font-size: 4rem;
+          font-size: 2.2rem;
           font-weight: 900;
           text-transform: uppercase;
-          letter-spacing: 2px;
+          letter-spacing: 1px;
           margin-bottom: 1rem;
         }
 
         .pkg-hero-subtitle {
-          font-size: 1.2rem;
+          font-size: 0.95rem;
           opacity: 0.8;
           max-width: 600px;
           margin: 0 auto;
+          line-height: 1.6;
         }
 
         .filter-section {
@@ -263,7 +264,7 @@ const Activities = () => {
           bottom: 0;
           left: 0;
           width: 100%;
-          padding: 2.5rem;
+          padding: 1.8rem;
           z-index: 2;
         }
 
@@ -271,33 +272,33 @@ const Activities = () => {
           display: inline-block;
           background: var(--primary, #c6ff00);
           color: black;
-          padding: 0.4rem 1rem;
+          padding: 0.3rem 0.7rem;
           border-radius: 20px;
-          font-size: 0.7rem;
+          font-size: 0.65rem;
           font-weight: 800;
-          margin-bottom: 1rem;
+          margin-bottom: 0.8rem;
           text-transform: uppercase;
         }
 
         .pkg-card-title {
-          font-size: 1.8rem;
+          font-size: 1.15rem;
           font-weight: 800;
           margin-bottom: 0.8rem;
-          line-height: 1.1;
+          line-height: 1.25;
         }
 
         .pkg-card-meta {
           display: flex;
           flex-direction: column;
-          margin-bottom: 1.5rem;
-          font-size: 0.9rem;
+          margin-bottom: 1.2rem;
+          font-size: 0.78rem;
           opacity: 0.7;
         }
 
         .pkg-card-footer {
           display: flex;
           gap: 1rem;
-          margin-top: 1rem;
+          margin-top: 0.8rem;
         }
 
         .pkg-view-btn-custom {
@@ -305,9 +306,10 @@ const Activities = () => {
           background: white;
           color: black;
           border: none;
-          padding: 1rem;
-          border-radius: 15px;
+          padding: 0.7rem 0.8rem;
+          border-radius: 12px;
           font-weight: 700;
+          font-size: 0.82rem;
           cursor: pointer;
           transition: all 0.3s ease;
           text-align: center;
@@ -326,7 +328,7 @@ const Activities = () => {
             flex-direction: column;
             align-items: stretch;
           }
-          .pkg-hero-title { font-size: 3rem; }
+          .pkg-hero-title { font-size: 1.8rem; }
           .pkg-grid-section { padding: 2rem; }
         }
 
@@ -362,6 +364,23 @@ const Activities = () => {
           .modern-pkg-card {
             width: 100%;
             max-width: 420px;
+            height: 420px;
+          }
+          .pkg-card-content {
+            padding: 1.2rem;
+          }
+          .pkg-card-title {
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+          }
+          .pkg-card-meta {
+            margin-bottom: 0.9rem;
+            font-size: 0.72rem;
+          }
+          .pkg-view-btn-custom {
+            padding: 0.6rem;
+            font-size: 0.78rem;
+            border-radius: 10px;
           }
         }
       `}</style>

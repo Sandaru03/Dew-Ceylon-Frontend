@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -86,7 +86,9 @@ const ActivityDetail = () => {
         .activity-hero-content {
           position: relative;
           z-index: 2;
-          padding: 4rem 10%;
+          padding: 4rem 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
           width: 100%;
         }
 
@@ -94,62 +96,82 @@ const ActivityDetail = () => {
           display: inline-block;
           background: var(--primary, #c6ff00);
           color: black;
-          padding: 0.5rem 1.5rem;
+          padding: 0.3rem 0.8rem;
           border-radius: 30px;
           font-weight: 800;
-          font-size: 0.9rem;
+          font-size: 0.7rem;
           text-transform: uppercase;
           letter-spacing: 1px;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
         }
 
         .activity-title {
-          font-size: 4.5rem;
+          font-size: 2rem;
           font-weight: 950;
           margin-bottom: 1rem;
-          line-height: 1.1;
-          letter-spacing: -2px;
+          line-height: 1.2;
+          letter-spacing: -0.5px;
         }
 
         .activity-tagline {
-          font-size: 1.5rem;
+          font-size: 0.95rem;
           opacity: 0.8;
           max-width: 800px;
           font-weight: 300;
         }
 
         .activity-main-content {
-          padding: 5rem 10%;
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 4rem;
+          padding: 4rem 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
+          width: 100%;
         }
 
         .activity-description {
-          font-size: 1.15rem;
-          line-height: 1.8;
+          font-size: 0.92rem;
+          line-height: 1.7;
           opacity: 0.9;
           margin-bottom: 3rem;
           background: rgba(255,255,255,0.02);
-          padding: 3rem;
-          border-radius: 30px;
+          padding: 2.2rem;
+          border-radius: 24px;
           border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .activity-description h3 {
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: var(--primary, #c6ff00);
+          letter-spacing: 0.5px;
+          margin-bottom: 0.5rem;
+        }
+
+        .expect-title {
+          font-size: 1.3rem;
+          margin-bottom: 1.5rem;
+          font-weight: 900;
+          text-transform: uppercase;
         }
 
         .items-grid {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 2rem;
+          gap: 1.5rem;
         }
 
         .item-card {
            background: #1a1a1a;
-           border-radius: 20px;
+           border-radius: 24px;
            overflow: hidden;
            border: 1px solid rgba(255, 255, 255, 0.05);
            display: flex;
-           align-items: center;
+           align-items: stretch;
            transition: transform 0.3s ease;
+           min-height: 260px;
+        }
+
+        .item-card:nth-child(even) {
+          flex-direction: row-reverse;
         }
         
         .item-card:hover {
@@ -158,17 +180,21 @@ const ActivityDetail = () => {
         }
 
         .item-img {
-          width: 200px;
-          height: 100%;
+          width: 320px;
           object-fit: cover;
+          flex-shrink: 0;
+          background: #252525;
         }
 
         .item-info {
-           padding: 2rem;
+           padding: 2.5rem;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
         }
 
         .item-title {
-          font-size: 1.5rem;
+          font-size: 1.05rem;
           font-weight: 800;
           margin-bottom: 0.5rem;
           color: var(--primary, #c6ff00);
@@ -177,32 +203,17 @@ const ActivityDetail = () => {
         .item-desc {
           opacity: 0.7;
           line-height: 1.6;
-        }
-
-        .booking-sidebar {
-          position: sticky;
-          top: 100px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 30px;
-          padding: 3rem;
-          height: fit-content;
-        }
-
-        .booking-title {
-          font-size: 2rem;
-          font-weight: 900;
-          margin-bottom: 1.5rem;
+          font-size: 0.85rem;
         }
 
         .book-btn {
           width: 100%;
-          padding: 1.2rem;
+          padding: 0.8rem 1rem;
           background: var(--primary, #c6ff00);
           color: black;
           border: none;
-          border-radius: 15px;
-          font-size: 1.1rem;
+          border-radius: 12px;
+          font-size: 0.85rem;
           font-weight: 800;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -211,17 +222,75 @@ const ActivityDetail = () => {
         }
 
         .book-btn:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 15px 30px rgba(198, 255, 0, 0.2);
+          transform: translateY(-4px);
+          box-shadow: 0 10px 25px rgba(198, 255, 0, 0.2);
+        }
+
+        .activity-actions {
+          margin-top: 3rem;
+          display: flex;
+          gap: 1.5rem;
+          flex-wrap: wrap;
+          align-items: center;
         }
 
         @media (max-width: 1024px) {
           .activity-main-content {
-            grid-template-columns: 1fr;
+            padding: 3rem 1.5rem;
           }
-          .activity-title { font-size: 3.5rem; }
-          .item-card { flex-direction: column; }
-          .item-img { width: 100%; height: 200px; }
+          .activity-hero-content {
+            padding: 3rem 1.5rem;
+          }
+          .activity-title { 
+            font-size: 1.4rem; 
+            letter-spacing: -0.5px;
+          }
+          .activity-tagline {
+            font-size: 0.85rem;
+          }
+          .activity-description {
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+          }
+          .activity-description h3 {
+            font-size: 1.05rem;
+          }
+          .expect-title {
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+          }
+          .item-card { 
+            flex-direction: column; 
+            min-height: auto;
+          }
+          .item-card:nth-child(even) {
+            flex-direction: column;
+          }
+          .item-img { 
+            width: 100%; 
+            height: 200px; 
+            min-height: auto;
+          }
+          .item-info {
+            padding: 1.5rem;
+          }
+          .book-btn {
+            padding: 0.8rem;
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .activity-actions {
+            flex-direction: column;
+            gap: 1rem;
+          }
+          .activity-actions button {
+            width: 100% !important;
+            padding: 0.9rem !important;
+          }
         }
       `}</style>
 
@@ -242,11 +311,19 @@ const ActivityDetail = () => {
 
           {activity.items && activity.items.length > 0 && (
             <div className="items-section">
-              <h2 style={{fontSize: '2.5rem', marginBottom: '2rem'}}>What to Expect</h2>
+              <h2 className="expect-title">What to Expect</h2>
               <div className="items-grid">
                 {activity.items.map((item, index) => (
                   <div className="item-card animate-fade-in-up" key={index} style={{animationDelay: `${index * 0.1}s`}}>
-                    <img src={item.image} alt={item.title} className="item-img" />
+                    <img 
+                      src={item.image} 
+                      alt={item.title} 
+                      className="item-img" 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=1000";
+                      }}
+                    />
                     <div className="item-info">
                       <h4 className="item-title">{item.title}</h4>
                       <p className="item-desc">{item.description}</p>
@@ -256,29 +333,23 @@ const ActivityDetail = () => {
               </div>
             </div>
           )}
-        </div>
 
-        <aside className="sidebar-col">
-           <div className="booking-sidebar animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-              <h3 className="booking-title">Ready for an Adventure?</h3>
-              <p style={{opacity: 0.7, marginBottom: '2rem'}}>Contact our team to include this activity in your curated journey.</p>
-              <button 
-                className="book-btn"
-                onClick={() => navigate('/plan')}
-              >
-                Inquire Now
-              </button>
-              
-              <div style={{marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem'}}>
-                 <button 
-                   onClick={() => navigate('/activities')}
-                   style={{background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '1rem', width: '100%', borderRadius: '15px', cursor: 'pointer', fontWeight: 'bold'}}
-                 >
-                   Explore Other Activities
-                 </button>
-              </div>
-           </div>
-        </aside>
+          <div className="activity-actions animate-fade-in-up">
+            <button 
+              className="book-btn"
+              onClick={() => navigate('/plan')}
+              style={{ width: 'auto', padding: '1rem 2.5rem' }}
+            >
+              Inquire Now
+            </button>
+            <button 
+              onClick={() => navigate('/activities')}
+              style={{ background: 'transparent', border: '1px solid rgba(255, 255, 255, 0.2)', color: 'white', padding: '1.05rem 2.5rem', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}
+            >
+              Explore Other Activities
+            </button>
+          </div>
+        </div>
       </main>
 
       <Footer />
@@ -287,5 +358,3 @@ const ActivityDetail = () => {
 };
 
 export default ActivityDetail;
-
-

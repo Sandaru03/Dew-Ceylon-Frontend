@@ -86,6 +86,23 @@ const Footer = () => {
           color: #666;
           font-size: 0.9rem;
         }
+
+        .syntechcraft-link {
+          color: var(--primary);
+          font-weight: 700;
+          cursor: pointer;
+          position: relative;
+          z-index: 999999;
+          display: inline-block;
+          text-decoration: none;
+          padding: 15px 20px;
+          margin: -15px -20px;
+          pointer-events: auto !important;
+          touch-action: manipulation;
+        }
+        .syntechcraft-link:hover {
+          text-decoration: underline;
+        }
         
         .social-icons {
           display: flex;
@@ -150,7 +167,7 @@ const Footer = () => {
             </div>
             <p className="footer-brand-desc">
               Experience the True Heart of Sri Lanka with Dew Ceylon Tours. 
-              We don’t just show you places—we immerse you in the soul of the island.
+              We don’t just show you places we immerse you in the soul of the island.
             </p>
           </div>
 
@@ -158,7 +175,6 @@ const Footer = () => {
             <h3>QUICK BROWSE</h3>
             <ul>
               <li><a href="/">Home</a></li>
-              <li><a href="/about">Our Story</a></li>
               <li><a href="/packages">Popular Packages</a></li>
               <li><a href="/activities">Top Activities</a></li>
               <li><a href="/taxi">Airport Taxi</a></li>
@@ -196,6 +212,17 @@ const Footer = () => {
         {/* Bottom Bar Section */}
         <div className="footer-bottom-bar">
           <p className="copyright">&copy; {new Date().getFullYear()} Dew Ceylon. All Rights Reserved.</p>
+          <p className="copyright">
+            Created By{' '}
+            <a
+              href="https://www.syntechcraft.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="syntechcraft-link"
+            >
+              Syntechcraft
+            </a>
+          </p>
         </div>
 
       </div>

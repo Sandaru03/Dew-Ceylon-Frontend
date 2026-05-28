@@ -2,6 +2,7 @@ import React, { useState, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import WhatsAppButton from './components/WhatsAppButton';
+import LanguageSwitcher from './components/LanguageSwitcher';
 import Loader from './components/Loader';
 import './index.css';
 
@@ -18,13 +19,11 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const PlanMyTrip = lazy(() => import('./pages/PlanMyTrip'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Taxi = lazy(() => import('./pages/Taxi'));
-const AboutUs = lazy(() => import('./pages/AboutUs'));
 
 const AppContent = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
-  const isAboutPage = location.pathname === '/about';
 
   return (
     <>
@@ -37,15 +36,14 @@ const AppContent = () => {
         }
       `}</style>
       
-      {!isAdmin && !isAboutPage && (
+      {!isAdmin && (
         <>
           {loading && <Loader onFinish={() => setLoading(false)} />}
           <Navbar />
           <WhatsAppButton />
+          <LanguageSwitcher />
         </>
       )}
-
-      {isAboutPage && loading && <Loader onFinish={() => setLoading(false)} />}
 
       <Suspense fallback={<div style={{background: '#0F0F0F', height: '100vh', width: '100vw'}}></div>}>
         <Routes>
@@ -59,7 +57,6 @@ const AppContent = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/plan-my-trip" element={<PlanMyTrip />} />
           <Route path="/taxi" element={<Taxi />} />
-          <Route path="/about" element={<AboutUs />} />
           <Route path="/admin" element={<AdminLoginPage />} />
           <Route path="/admin/dashboard/*" element={<AdminDashboard />} />
         </Routes>

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -489,7 +489,7 @@ const Blog = () => {
                     <h3 className="blog-card-title">{blog.title}</h3>
                     <p className="blog-card-excerpt">{blog.excerpt}</p>
                     <div className="blog-card-footer">
-                      <span className="blog-author">{blog.author}</span>
+                      <span className="blog-author">{blog.author === 'Ceyloria Team' ? 'Dew Ceylon Team' : blog.author}</span>
                       <button 
                          className="read-more-btn"
                          onClick={() => navigate(`/blogs/${blog.id}`)}

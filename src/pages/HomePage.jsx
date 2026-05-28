@@ -18,11 +18,11 @@ const slides = [
     objectPosition: '35% center'
   },
   {
-    image: 'https://res.cloudinary.com/dicvgtusz/image/upload/v1774243228/hero2_2_1_kq3qmc.jpg',
-    bgText: 'ADVENTURE',
+    image: 'https://res.cloudinary.com/dicvgtusz/image/upload/f_auto,q_auto,w_1600/v1776664011/chathura-anuradha-subasinghe-_M4yPHONK58-unsplash_jogbn6.jpg',
+    bgText: 'SERENITY',
     titleMain: 'Discover The',
-    titleSub: 'Untamed Beauty',
-    objectPosition: 'center center'
+    titleSub: 'Soul of Tradition',
+    objectPosition: 'center 40%'
   },
   {
     image: 'https://res.cloudinary.com/dicvgtusz/image/upload/v1774240526/demodara-nine-arch-bridge-ella-sri-lanka.jpg_1_xm706n.jpg',
@@ -133,7 +133,7 @@ const HomePage = () => {
           transform: translateY(-50%);
           font-size: 13vw;
           font-weight: 900;
-          color: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.06);
           line-height: 1;
           pointer-events: none;
           z-index: 1;

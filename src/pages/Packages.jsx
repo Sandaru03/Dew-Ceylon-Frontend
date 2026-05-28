@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -271,7 +271,7 @@ const PackagesPage = () => {
           bottom: 0;
           left: 0;
           width: 100%;
-          padding: 2.5rem;
+          padding: 1.8rem;
           z-index: 2;
         }
 
@@ -279,32 +279,32 @@ const PackagesPage = () => {
           display: inline-block;
           background: var(--primary, #c6ff00);
           color: black;
-          padding: 0.4rem 1rem;
+          padding: 0.3rem 0.7rem;
           border-radius: 20px;
-          font-size: 0.7rem;
+          font-size: 0.65rem;
           font-weight: 800;
-          margin-bottom: 1rem;
+          margin-bottom: 0.8rem;
           text-transform: uppercase;
         }
 
         .pkg-card-title {
-          font-size: 1.8rem;
+          font-size: 1.35rem;
           font-weight: 800;
           margin-bottom: 0.8rem;
-          line-height: 1.1;
+          line-height: 1.25;
         }
 
         .pkg-card-meta {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 1.5rem;
-          font-size: 0.9rem;
+          margin-bottom: 1.2rem;
+          font-size: 0.8rem;
           opacity: 0.7;
         }
 
         .pkg-card-price {
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           font-weight: 900;
           color: var(--primary, #c6ff00);
         }
@@ -312,7 +312,7 @@ const PackagesPage = () => {
         .pkg-card-footer {
           display: flex;
           gap: 1rem;
-          margin-top: 1rem;
+          margin-top: 0.8rem;
         }
 
         .pkg-view-btn-custom {
@@ -320,9 +320,10 @@ const PackagesPage = () => {
           background: white;
           color: black;
           border: none;
-          padding: 1rem;
-          border-radius: 15px;
+          padding: 0.8rem;
+          border-radius: 12px;
           font-weight: 700;
+          font-size: 0.9rem;
           cursor: pointer;
           transition: all 0.3s ease;
           text-align: center;
@@ -379,6 +380,26 @@ const PackagesPage = () => {
           .modern-pkg-card {
             width: 100%;
             max-width: 420px;
+            height: 420px;
+          }
+          .pkg-card-content {
+            padding: 1.2rem;
+          }
+          .pkg-card-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+          }
+          .pkg-card-meta {
+            margin-bottom: 0.9rem;
+            font-size: 0.75rem;
+          }
+          .pkg-card-price {
+            font-size: 1.2rem;
+          }
+          .pkg-view-btn-custom {
+            padding: 0.7rem;
+            font-size: 0.85rem;
+            border-radius: 10px;
           }
         }
       `}</style>

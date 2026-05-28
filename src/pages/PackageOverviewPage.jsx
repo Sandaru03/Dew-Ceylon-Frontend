@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -75,6 +75,18 @@ const PackageOverviewPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [activeImage, setActiveImage] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [openSections, setOpenSections] = useState({
+    overview: true,
+    itinerary: false,
+    inclusions: false
+  });
+
+  const toggleSection = (section) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   const parseArrayField = (value) => {
     if (Array.isArray(value)) return value;
@@ -155,6 +167,87 @@ const PackageOverviewPage = () => {
       console.error('Error sharing:', err);
     }
   };
+
+  const renderOverviewContent = () => (
+    <div className="about-section">
+      <h2 className="section-title-sm">About this Package</h2>
+      <p className="desc-p-alt">{pkg.description}</p>
+      
+      <div className="covered-cities-box">
+        <p className="covered-cities-title">Covered Cities</p>
+        {pkg.locations.map(city => (
+          <span className="city-tag-alt" key={city}>{city}</span>
+        ))}
+      </div>
+
+      <div className="love-box">
+        <div className="love-box-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Why travelers love this
+        </div>
+        <ul className="love-list">
+          {pkg.highlights.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+
+  const renderItineraryContent = () => (
+    <div>
+      <h2 className="itinerary-title-desktop">Journey Roadmap</h2>
+      <div className="itinerary-container">
+        {pkg.itinerary.map(day => (
+          <div key={day.day} className="itinerary-card">
+            <div className="itinerary-header">
+              <span className="itinerary-day-num">Day 0{day.day}</span>
+              <h4 className="itinerary-day-title">{day.title}</h4>
+            </div>
+            <div className="itinerary-body">
+              <p className="itinerary-desc">{day.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderInclusionsContent = () => (
+    <div>
+      <h2 className="inclusions-title-desktop">What's Included</h2>
+      <div className="inclusions-grid">
+        <div className="inclusions-col">
+          <h4 className="inclusions-header-label">Inclusions</h4>
+          <ul className="inclusions-list">
+            {pkg.inclusions.map((item, i) => (
+              <li key={i} className="inc-item">
+                <svg className="inc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{item.replace(/^\+\s*/, '')}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="exclusions-col">
+          <h4 className="exclusions-header-label">Exclusions</h4>
+          <ul className="exclusions-list">
+            {pkg.exclusions.map((item, i) => (
+              <li key={i} className="exc-item">
+                <svg className="exc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>{item.replace(/^-\s*/, '')}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+
+
 
   if (loading) return <div style={{background: '#0F0F0F', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><h2>Loading Journey...</h2></div>;
   if (!pkg) return <div style={{background: '#0F0F0F', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><h2>Journey not found</h2></div>;
@@ -253,57 +346,58 @@ const PackageOverviewPage = () => {
 
         .location-tags {
           display: flex;
-          gap: 0.8rem;
-          margin-bottom: 1.2rem;
+          gap: 0.6rem;
+          margin-bottom: 1rem;
           flex-wrap: wrap;
         }
 
         .loc-tag {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           font-weight: 700;
-          padding: 0.4rem 0.8rem;
+          padding: 0.3rem 0.6rem;
           background: rgba(198, 255, 0, 0.1);
           color: var(--primary, #c6ff00);
-          border-radius: 10px;
+          border-radius: 8px;
           text-transform: uppercase;
         }
 
         .pkg-title-big {
-          font-size: 3.5rem;
+          font-size: 2.2rem;
           font-weight: 900;
-          line-height: 1.1;
-          margin-bottom: 1rem;
+          line-height: 1.2;
+          margin-bottom: 0.8rem;
+          letter-spacing: -0.5px;
         }
 
         .stats-row {
           display: flex;
           align-items: center;
-          gap: 1.5rem;
-          margin-bottom: 2rem;
-          font-size: 0.9rem;
+          gap: 1.2rem;
+          margin-bottom: 1.5rem;
+          font-size: 0.85rem;
           opacity: 0.8;
         }
 
         .stat-rating { color: #FFC107; font-weight: 800; }
 
         .price-section-new {
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
         }
 
         .starting-text {
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           opacity: 0.5;
-          margin-bottom: 0.3rem;
+          margin-bottom: 0.2rem;
         }
 
         .price-row-flex {
           display: flex;
           align-items: center;
-          gap: 1.5rem;
+          gap: 1.2rem;
         }
 
         .big-price {
-          font-size: 3rem;
+          font-size: 2.2rem;
           font-weight: 900;
           color: var(--primary, #c6ff00);
         }
@@ -311,31 +405,37 @@ const PackageOverviewPage = () => {
         .available-now {
           background: rgba(0, 255, 136, 0.1);
           color: #00FF88;
-          padding: 0.3rem 0.8rem;
+          padding: 0.25rem 0.7rem;
           border-radius: 20px;
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           font-weight: 700;
         }
 
         .spec-boxes {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-          margin-bottom: 2.5rem;
+          gap: 0.8rem;
+          margin-bottom: 1.8rem;
         }
 
         .spec-box {
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.05);
-          padding: 1.2rem;
-          border-radius: 20px;
+          padding: 0.8rem 1rem;
+          border-radius: 16px;
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 0.8rem;
         }
 
-        .spec-label { font-size: 0.7rem; opacity: 0.5; text-transform: uppercase; margin-bottom: 0.2rem; }
-        .spec-val { font-weight: 700; font-size: 0.9rem; }
+        .spec-box svg {
+          width: 18px;
+          height: 18px;
+          flex-shrink: 0;
+        }
+
+        .spec-label { font-size: 0.65rem; opacity: 0.5; text-transform: uppercase; margin-bottom: 0.1rem; }
+        .spec-val { font-weight: 700; font-size: 0.85rem; }
 
         .cta-group {
           display: flex;
@@ -346,8 +446,8 @@ const PackageOverviewPage = () => {
         .book-btn-link {
           background: #b9ff00;
           color: #0F0F0F;
-          padding: 1.5rem;
-          border-radius: 20px;
+          padding: 1rem;
+          border-radius: 14px;
           font-weight: 800;
           text-align: center;
           border: none;
@@ -356,21 +456,21 @@ const PackageOverviewPage = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
-          font-size: 1.1rem;
+          gap: 8px;
+          font-size: 0.95rem;
         }
 
         .book-btn-link:hover {
           background: #c6ff00;
-          transform: translateY(-5px);
-          box-shadow: 0 10px 30px rgba(185, 255, 0, 0.2);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(185, 255, 0, 0.2);
         }
 
         .ask-btn-outline {
           background: white;
           color: black;
-          padding: 1.2rem;
-          border-radius: 15px;
+          padding: 1rem;
+          border-radius: 14px;
           font-weight: 700;
           border: 1px solid rgba(255,255,255,0.1);
           cursor: pointer;
@@ -385,9 +485,9 @@ const PackageOverviewPage = () => {
         }
 
         .cancellation-note {
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           text-align: center;
-          margin-top: 1.5rem;
+          margin-top: 1rem;
           opacity: 0.6;
         }
 
@@ -396,6 +496,14 @@ const PackageOverviewPage = () => {
           padding: 4rem 4rem 8rem 4rem;
           max-width: 1400px;
           margin: 0 auto;
+        }
+
+        .desktop-details-view {
+          display: block;
+        }
+
+        .mobile-details-view {
+          display: none;
         }
 
         .detail-tabs {
@@ -429,6 +537,67 @@ const PackageOverviewPage = () => {
           background: var(--primary, #c6ff00);
         }
 
+        /* Accordion CSS for Mobile */
+        .accordion-item {
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px;
+          margin-bottom: 0.8rem;
+          overflow: hidden;
+          background: rgba(255, 255, 255, 0.02);
+          transition: all 0.3s ease;
+        }
+
+        .accordion-item:hover {
+          border-color: rgba(185, 255, 0, 0.2);
+        }
+
+        .accordion-header {
+          width: 100%;
+          padding: 1.2rem 1.5rem;
+          background: none;
+          border: none;
+          color: white;
+          font-weight: 800;
+          font-size: 0.95rem;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+          transition: color 0.3s ease;
+          font-family: inherit;
+        }
+
+        .accordion-header:hover {
+          color: var(--primary, #c6ff00);
+        }
+
+        .accordion-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.3s ease;
+        }
+
+        .accordion-icon.open {
+          transform: rotate(180deg);
+          color: var(--primary, #c6ff00);
+        }
+
+        .accordion-content {
+          display: none;
+          background: rgba(0, 0, 0, 0.15);
+        }
+
+        .accordion-content.open {
+          display: block;
+        }
+
+        .accordion-inner {
+          padding: 1.5rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
         .about-section {
           max-width: 800px;
         }
@@ -448,6 +617,13 @@ const PackageOverviewPage = () => {
 
         .covered-cities-box {
           margin-bottom: 4rem;
+        }
+
+        .covered-cities-title {
+          font-weight: 700;
+          font-size: 0.9rem;
+          margin-bottom: 1.2rem;
+          opacity: 0.8;
         }
 
         .city-tag-alt {
@@ -506,13 +682,354 @@ const PackageOverviewPage = () => {
           flex-shrink: 0;
         }
 
+        /* Itinerary Timeline Styles */
+        .itinerary-title-desktop {
+          display: block;
+          font-size: 2rem;
+          font-weight: 900;
+          margin-bottom: 2rem;
+        }
+
+        .itinerary-container {
+          max-width: 800px;
+          position: relative;
+          padding-left: 2.5rem;
+          border-left: 2px dashed rgba(255, 255, 255, 0.1);
+          margin-left: 1rem;
+        }
+
+        .itinerary-card {
+          position: relative;
+          margin-bottom: 2.5rem;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          padding: 1.8rem;
+          border-radius: 20px;
+          transition: all 0.3s ease;
+        }
+
+        .itinerary-card:hover {
+          background: rgba(255, 255, 255, 0.04);
+          border-color: rgba(185, 255, 0, 0.2);
+          transform: translateX(5px);
+        }
+
+        .itinerary-card::before {
+          content: '';
+          position: absolute;
+          left: -3.15rem;
+          top: 2rem;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #0F0F0F;
+          border: 3px solid var(--primary, #c6ff00);
+          box-shadow: 0 0 10px rgba(185, 255, 0, 0.5);
+          z-index: 2;
+        }
+
+        .itinerary-header {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .itinerary-day-num {
+          background: var(--primary, #c6ff00);
+          color: #0F0F0F;
+          font-weight: 900;
+          font-size: 0.85rem;
+          padding: 0.3rem 0.7rem;
+          border-radius: 8px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .itinerary-day-title {
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: white;
+        }
+
+        .itinerary-desc {
+          opacity: 0.7;
+          line-height: 1.7;
+          font-size: 0.95rem;
+        }
+
+        /* Inclusions & Exclusions Styles */
+        .inclusions-title-desktop {
+          display: block;
+          font-size: 2rem;
+          font-weight: 900;
+          margin-bottom: 2rem;
+        }
+
+        .inclusions-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4rem;
+          max-width: 900px;
+        }
+
+        .inclusions-header-label {
+          color: var(--primary, #c6ff00);
+          margin-bottom: 1.5rem;
+          text-transform: uppercase;
+          font-size: 0.9rem;
+          font-weight: 800;
+          letter-spacing: 1.5px;
+          border-bottom: 1px solid rgba(185, 255, 0, 0.15);
+          padding-bottom: 0.5rem;
+        }
+
+        .exclusions-header-label {
+          color: #ff4b4b;
+          margin-bottom: 1.5rem;
+          text-transform: uppercase;
+          font-size: 0.9rem;
+          font-weight: 800;
+          letter-spacing: 1.5px;
+          border-bottom: 1px solid rgba(255, 75, 75, 0.15);
+          padding-bottom: 0.5rem;
+        }
+
+        .inclusions-list,
+        .exclusions-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .inc-item,
+        .exc-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.8rem;
+          font-size: 1rem;
+          line-height: 1.5;
+        }
+
+        .inc-item {
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .exc-item {
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .inc-icon {
+          width: 18px;
+          height: 18px;
+          color: var(--primary, #c6ff00);
+          flex-shrink: 0;
+          margin-top: 0.2rem;
+        }
+
+        .exc-icon {
+          width: 16px;
+          height: 16px;
+          color: #ff4b4b;
+          flex-shrink: 0;
+          margin-top: 0.25rem;
+        }
+
         /* Mobile */
         @media (max-width: 1024px) {
           .top-hero-section { grid-template-columns: 1fr; padding: 0 2rem; }
           .bottom-details-section { padding: 4rem 2rem; }
           .main-image-wrapper { height: 400px; }
-          .pkg-title-big { font-size: 2.5rem; }
+          .pkg-title-big { font-size: 1.8rem; }
           .detail-tabs { gap: 2rem; font-size: 0.8rem; overflow-x: auto; }
+        }
+
+        @media (max-width: 768px) {
+          .top-hero-section {
+            padding: 0 1.5rem;
+            gap: 2rem;
+          }
+          .location-tags {
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+          }
+          .loc-tag {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+          }
+          .pkg-title-big {
+            font-size: 1.45rem;
+            margin-bottom: 0.6rem;
+            line-height: 1.25;
+          }
+          .stats-row {
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.78rem;
+          }
+          .price-section-new {
+            margin-bottom: 1.2rem;
+          }
+          .starting-text {
+            font-size: 0.7rem;
+            margin-bottom: 0.1rem;
+          }
+          .big-price {
+            font-size: 1.8rem;
+          }
+          .available-now {
+            padding: 0.2rem 0.6rem;
+            font-size: 0.7rem;
+          }
+          .spec-boxes {
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+          }
+          .spec-box {
+            padding: 0.6rem 0.8rem;
+            border-radius: 12px;
+            gap: 0.6rem;
+          }
+          .spec-box svg {
+            width: 15px;
+            height: 15px;
+          }
+          .spec-label {
+            font-size: 0.6rem;
+          }
+          .spec-val {
+            font-size: 0.75rem;
+          }
+          .book-btn-link {
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            gap: 6px;
+          }
+          .cancellation-note {
+            font-size: 0.7rem;
+            margin-top: 0.8rem;
+          }
+          .desktop-details-view {
+            display: none;
+          }
+          .mobile-details-view {
+            display: block;
+          }
+          .bottom-details-section {
+            padding: 2rem 1.5rem 6rem 1.5rem;
+          }
+          /* Mobile Itinerary Overrides */
+          .itinerary-title-desktop {
+            display: none;
+          }
+          .itinerary-container {
+            padding-left: 1.2rem;
+            margin-left: 0.5rem;
+          }
+          .itinerary-card {
+            padding: 1.2rem;
+            border-radius: 16px;
+            margin-bottom: 1.8rem;
+          }
+          .itinerary-card::before {
+            left: -1.6rem;
+            top: 1.4rem;
+            width: 12px;
+            height: 12px;
+            border-width: 2.5px;
+          }
+          .itinerary-header {
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+          }
+          .itinerary-day-title {
+            font-size: 1.05rem;
+          }
+          .itinerary-day-num {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+          }
+          .itinerary-desc {
+            font-size: 0.88rem;
+            line-height: 1.6;
+          }
+          /* Mobile Inclusions/Exclusions Overrides */
+          .inclusions-title-desktop {
+            display: none;
+          }
+          .inclusions-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+          .inclusions-header-label,
+          .exclusions-header-label {
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+          }
+          .inc-item,
+          .exc-item {
+            font-size: 0.88rem;
+            gap: 0.6rem;
+          }
+          .inc-icon {
+            width: 15px;
+            height: 15px;
+            margin-top: 0.15rem;
+          }
+          .exc-icon {
+            width: 14px;
+            height: 14px;
+            margin-top: 0.2rem;
+          }
+          /* Mobile Overview Overrides */
+          .section-title-sm {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+          }
+          .desc-p-alt {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin-bottom: 1.8rem;
+          }
+          .covered-cities-title {
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+          }
+          .city-tag-alt {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.8rem;
+            margin-right: 0.6rem;
+            border-radius: 8px;
+          }
+          .covered-cities-box {
+            margin-bottom: 2rem;
+          }
+          .love-box {
+            padding: 1.5rem;
+            border-radius: 16px;
+          }
+          .love-box-title {
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            gap: 0.6rem;
+          }
+          .love-list {
+            gap: 0.8rem;
+          }
+          .love-list li {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            gap: 0.6rem;
+          }
+          .love-list li::before {
+            width: 6px;
+            height: 6px;
+            margin-top: 0.4rem;
+          }
         }
       `}</style>
 
@@ -603,88 +1120,46 @@ const PackageOverviewPage = () => {
       </section>
 
       <section className="bottom-details-section">
-        <nav className="detail-tabs">
-          {['overview', 'itinerary', 'inclusions', 'reviews'].map(tab => (
-            <div 
-              key={tab}
-              className={`tab-nav-item ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-            >{tab}</div>
+        {/* Desktop View */}
+        <div className="desktop-details-view">
+          <nav className="detail-tabs">
+            {['overview', 'itinerary', 'inclusions'].map(tab => (
+              <div 
+                key={tab}
+                className={`tab-nav-item ${activeTab === tab ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab)}
+              >{tab}</div>
+            ))}
+          </nav>
+
+          <div className="tab-content-area animate-fade-in">
+            {activeTab === 'overview' && renderOverviewContent()}
+            {activeTab === 'itinerary' && renderItineraryContent()}
+            {activeTab === 'inclusions' && renderInclusionsContent()}
+          </div>
+        </div>
+
+        {/* Mobile View Accordion */}
+        <div className="mobile-details-view">
+          {[
+            { id: 'overview', title: 'Overview', render: renderOverviewContent },
+            { id: 'itinerary', title: 'Itinerary', render: renderItineraryContent },
+            { id: 'inclusions', title: 'Inclusions', render: renderInclusionsContent }
+          ].map(section => (
+            <div key={section.id} className="accordion-item">
+              <button className="accordion-header" onClick={() => toggleSection(section.id)}>
+                <span>{section.title}</span>
+                <span className={`accordion-icon ${openSections[section.id] ? 'open' : ''}`}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </button>
+              <div className={`accordion-content ${openSections[section.id] ? 'open' : ''}`}>
+                <div className="accordion-inner">
+                  {section.render()}
+                </div>
+              </div>
+            </div>
           ))}
-        </nav>
-
-        <div className="tab-content-area animate-fade-in">
-          {activeTab === 'overview' && (
-            <div className="about-section">
-              <h2 className="section-title-sm">About this Package</h2>
-              <p className="desc-p-alt">{pkg.description}</p>
-              
-              <div className="covered-cities-box">
-                <p style={{fontWeight:'700', fontSize:'0.9rem', marginBottom:'1.2rem', opacity:0.8}}>Covered Cities</p>
-                {pkg.locations.map(city => (
-                  <span className="city-tag-alt" key={city}>{city}</span>
-                ))}
-              </div>
-
-              <div className="love-box">
-                <div className="love-box-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
-                  Why travelers love this
-                </div>
-                <ul className="love-list">
-                  {pkg.highlights.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'itinerary' && (
-            <div style={{maxWidth:'800px'}}>
-              <h2 className="section-title-sm">Journey Roadmap</h2>
-              {pkg.itinerary.map(day => (
-                <div key={day.day} style={{display:'flex', gap:'2rem', marginBottom:'3rem', background:'rgba(255,255,255,0.02)', padding:'2rem', borderRadius:'20px'}}>
-                  <div style={{minWidth:'60px', height:'60px', borderRadius:'15px', background:'var(--primary)', color:'black', display:'flex', alignItems:'center',justifyContent:'center', fontWeight:900}}>0{day.day}</div>
-                  <div>
-                    <h4 style={{fontSize:'1.2rem', marginBottom:'0.5rem'}}>{day.title}</h4>
-                    <p style={{opacity:0.6, lineHeight:1.6}}>{day.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {activeTab === 'inclusions' && (
-            <div style={{maxWidth:'800px'}}>
-              <h2 className="section-title-sm">What's Included</h2>
-              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'2rem'}}>
-                <div>
-                  <h4 style={{color:'var(--primary)', marginBottom:'1.5rem', textTransform:'uppercase', fontSize:'0.8rem', letterSpacing:'1px'}}>Inclusions</h4>
-                  <ul style={{listStyle:'none', display:'flex', flexDirection:'column', gap:'1rem', opacity:0.8}}>
-                    {pkg.inclusions.map((item, i) => <li key={i}>+ {item}</li>)}
-                  </ul>
-                </div>
-                <div>
-                  <h4 style={{color:'#ff4b4b', marginBottom:'1.5rem', textTransform:'uppercase', fontSize:'0.8rem', letterSpacing:'1px'}}>Exclusions</h4>
-                  <ul style={{listStyle:'none', display:'flex', flexDirection:'column', gap:'1rem', opacity:0.6}}>
-                    {pkg.exclusions.map((item, i) => <li key={i}>- {item}</li>)}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'reviews' && (
-            <div style={{textAlign:'center', padding:'4rem 0', opacity:0.5}}>
-              <h3>No reviews yet for this journey.</h3>
-              <p>Be the first to share your experience after your trip!</p>
-            </div>
-          )}
         </div>
       </section>
 

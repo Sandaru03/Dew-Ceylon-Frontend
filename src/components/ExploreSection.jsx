@@ -323,7 +323,7 @@ const ExploreSection = () => {
           </div>
           <h3 className="explore-title">Don't Just Visit<br/> Sri Lanka.</h3>
           
-          <p className="explore-tagline">Not Just a Tour… It’s Your Sri Lanka Story</p>
+          <p className="explore-tagline"> It’s Your Sri Lanka Story...</p>
 
 
           <h4 className="explore-desc-header">Feel It</h4>

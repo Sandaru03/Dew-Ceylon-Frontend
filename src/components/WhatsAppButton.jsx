@@ -23,7 +23,7 @@ const WhatsAppButton = () => {
       <style>{`
         .whatsapp-widget {
           position: fixed;
-          bottom: 2rem;
+          bottom: 4rem;
           right: 2rem;
           z-index: 9999;
           display: flex;
@@ -93,6 +93,7 @@ const WhatsAppButton = () => {
         }
 
         .wa-button {
+          position: relative;
           width: 65px;
           height: 65px;
           background-color: #25D366;
@@ -151,7 +152,7 @@ const WhatsAppButton = () => {
 
         @media (max-width: 768px) {
           .whatsapp-widget {
-            bottom: 1.5rem;
+            bottom: 3.5rem;
             right: 1.5rem;
           }
 

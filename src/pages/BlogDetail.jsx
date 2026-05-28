@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -173,7 +173,7 @@ const BlogDetail = () => {
             <span className="article-category">{blog.category}</span>
             <h1 className="article-title">{blog.title}</h1>
             <div className="article-meta">
-               <span>By {blog.author}</span>
+               <span>By {blog.author === 'Ceyloria Team' ? 'Dew Ceylon Team' : blog.author}</span>
                <div className="meta-divider"></div>
                <span>{new Date(blog.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                <div className="meta-divider"></div>

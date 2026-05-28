@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
@@ -12,7 +12,7 @@ const AdminBlogs = () => {
 
   // Form States
   const [formData, setFormData] = useState({
-    title: '', excerpt: '', content: '', image: '', images: [], author: 'Ceyloria Team', category: 'Travel Tips', anchor: '', link: '#'
+    title: '', excerpt: '', content: '', image: '', images: [], author: 'Dew Ceylon Team', category: 'Travel Tips', anchor: '', link: '#'
   });
 
 
@@ -198,7 +198,7 @@ const AdminBlogs = () => {
           <div className="form-grid">
             <div className="form-group">
                <label>Author</label>
-               <input type="text" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} placeholder="e.g. Ceyloria Team" />
+               <input type="text" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} placeholder="e.g. Dew Ceylon Team" />
             </div>
             <div className="form-group">
                <label>Anchor id (URL Slug)</label>
@@ -314,7 +314,7 @@ const AdminBlogs = () => {
         <h1 className="view-title">Manage Stories</h1>
         <button className="btn-primary-admin" onClick={() => {
            setFormData({
-            title: '', excerpt: '', content: '', image: '', images: [], author: 'Ceyloria Team', category: categories.length > 0 ? categories[0].name : '', anchor: '', link: '#'
+            title: '', excerpt: '', content: '', image: '', images: [], author: 'Dew Ceylon Team', category: categories.length > 0 ? categories[0].name : '', anchor: '', link: '#'
           });
           setIsFormOpen(true);
         }}>+ Write New Story</button>

@@ -195,6 +195,10 @@ svg {
     animation: none !important;
   }
 
+  .wa-button::before {
+    display: none !important;
+  }
+
   .ut-slider-wrapper {
     overflow-x: hidden;
     overflow-y: hidden;
@@ -229,3 +233,23 @@ svg {
 }
 
 /* Removed contain: layout style to prevent stacking context issues */
+
+/* Google Translate Overrides */
+body {
+  top: 0 !important;
+}
+.skiptranslate iframe,
+.skiptranslate.goog-te-banner-frame {
+  display: none !important;
+}
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+body > .skiptranslate {
+  display: none !important;
+}
